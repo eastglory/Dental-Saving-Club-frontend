@@ -120,8 +120,6 @@ const RepairDataTable = (products) => {
                     <Column field="location" header="Location" body={locationBodyTemplate} editor={(options) => locationEditor(options)} ></Column>
                     <Column field="status" header="Status" body={statusBodyTemplate} editor={(options) => statusEditor(options)} ></Column>
                     <Column field="followUp" header="Follow Up" editor={(options) => textEditor(options)} ></Column>
-                    <Column field="secondReception" header="2nd Reception" editor={(options) => textEditor(options)} ></Column>
-                    <Column field="thirdReception" header="3rd Reception" editor={(options) => textEditor(options)} ></Column>
                     <Column header="Edit" rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                 </DataTable>
         </div>
