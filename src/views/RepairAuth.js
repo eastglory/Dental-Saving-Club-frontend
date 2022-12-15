@@ -119,27 +119,27 @@ function RepairAuth() {
                   </tbody>
                 </Table>
                 <div className="pt-5 d-flex flex-row align-items-center">
-                  <label className="col-sm-2 ">Quote On: </label>
+                  <label className="font-weight-bold text-dark col-sm-2 ">Quote On: </label>
                   <Calendar value={new Date()}></Calendar>
-                  <label className="ml-5 mr-3">via:</label>
+                  <label className="font-weight-bold text-dark ml-5 mr-3">via:</label>
                   <Dropdown value={selectValue1} onChange={(e)=>setSelectValue1(e.value)} options={[{name: 'email'}, {name: 'phone'}, {name: 'other'}]} optionLabel="name" placeholder="Select" />
                 </div>
                 <div className="pt-2 d-flex flex-row align-items-center">
-                  <label className="col-sm-2 ">Follow Up On: </label>
+                  <label className="font-weight-bold text-dark col-sm-2 ">Follow Up On: </label>
                   <Calendar value={new Date()}></Calendar>
-                  <label className="ml-5 mr-3">via:</label>
+                  <label className="font-weight-bold text-dark ml-5 mr-3">via:</label>
                   <Dropdown value={selectValue2} onChange={(e)=>setSelectValue2(e.value)} options={[{name: 'email'}, {name: 'phone'}, {name: 'other'}]} optionLabel="name" placeholder="Select" />
                 </div>
                 <div className="pt-2 d-flex flex-row align-items-center">
-                  <label className="col-sm-2 ">Status</label>
+                  <label className="font-weight-bold text-dark col-sm-2 ">Status</label>
                   <Dropdown value={status} onChange={(e)=>setStatus(e.value)} options={statuses} optionLabel="label" placeholder="Select status" />
-                  <label className="ml-5 mr-3">As of:</label>
+                  <label className="font-weight-bold text-dark ml-5 mr-3">As of:</label>
                   <Calendar value={new Date()}></Calendar>
-                  <label className="ml-5 mr-3">Reported By:</label>
+                  <label className="font-weight-bold text-dark ml-5 mr-3">Reported By:</label>
                   <Dropdown value={reporter} onChange={(e)=>setReporter(e.value)} options={reporters} optionLabel="label" placeholder="Select Reporter" />
                 </div>
                 <div className="pt-2 d-flex flex-row align-items-center">
-                  <label className="col-sm-3 ">Comments or special instructions :</label>
+                  <label className="font-weight-bold text-dark col-sm-3 ">Comments or special instructions :</label>
                   <Dropdown value={instruction} onChange={(e)=>setInstruction(e.value)} options={instructions} optionLabel="label" placeholder="Select" />
                 </div>
                 <div className="mx-3 mt-2">
@@ -155,6 +155,20 @@ function RepairAuth() {
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <RepairAuthTable data={data} />
+                <div className="pt-2 d-flex flex-row align-items-center">
+                  <label className="font-weight-bold text-dark col-sm-2 ">Signature: </label>
+                  <Form.Control className="border-bottom w-25"/>
+                  <label className="font-weight-bold text-dark ml-5 mr-3">Date:</label>
+                  <Calendar value={new Date()}></Calendar>
+                </div>
+                <div className="pt-2 d-flex flex-row align-items-center">
+                  <label className="font-weight-bold text-dark col-sm-2 ">Serviced By: </label>
+                  <Form.Control className="border-bottom w-25"/>
+                  <label className="font-weight-bold text-dark ml-5 mr-3">Date:</label>
+                  <Calendar value={new Date()}></Calendar>
+                  <label className="font-weight-bold text-dark ml-5 mr-3 ">ID: </label>
+                  <Form.Control className="border-bottom w-25"/>
+                </div>
               </Card.Body>
             </Card>
           </Col>
