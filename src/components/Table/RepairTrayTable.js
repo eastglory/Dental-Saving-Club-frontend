@@ -6,9 +6,10 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
+import { Calendar } from 'primereact/calendar'
 import { Badge } from 'react-bootstrap';
 
-const RepairDataTable = (products) => {
+const RepairTrayTable = (products) => {
     console.log(products)
     const [data, setData] = useState(null);
     const [editingRows, setEditingRows] = useState({});
@@ -55,9 +56,9 @@ const RepairDataTable = (products) => {
 
     const onRowEditComplete = (e) => {
         let _data = [...data];
+        console.log(e)
         let {newData, index } = e;
-
-        _data[index] = newData;
+        _data[index] = {...newData, receptionDate: newData.receptionDate.toLocaleDateString()};
 
         setData(_data);
     }
@@ -95,6 +96,11 @@ const RepairDataTable = (products) => {
                 }} />
         );
     }
+    const datePickerEditor = (options) => {
+        return (
+            <Calendar value={new Date(options.value)} onChange={(e) => options.editorCallback(e.value)} />
+        )
+    }
 
     const statusBodyTemplate = (rowData) => {
         return <Badge bg={`${getStatusLabel(rowData.status).badge}`} text="white">{getStatusLabel(rowData.status).label}</Badge>
@@ -116,7 +122,7 @@ const RepairDataTable = (products) => {
                     <Column field="client" header="Client" body={clientBodyTemplate} editor={(options) => clientEditor(options)} ></Column>
                     <Column field="recId" header="Rec ID" editor={(options) => textEditor(options)} ></Column>
                     <Column field="notes" header="Notes" editor={(options) => textEditor(options)} ></Column>
-                    <Column field="receptionDate" header="Reception Date" editor={(options) => textEditor(options)} ></Column>
+                    <Column field="receptionDate" header="Reception Date" editor={(options) => datePickerEditor(options)} ></Column>
                     <Column field="location" header="Location" body={locationBodyTemplate} editor={(options) => locationEditor(options)} ></Column>
                     <Column field="status" header="Status" body={statusBodyTemplate} editor={(options) => statusEditor(options)} ></Column>
                     <Column field="followUp" header="Follow Up" editor={(options) => textEditor(options)} ></Column>
@@ -127,4 +133,4 @@ const RepairDataTable = (products) => {
     
 }
 
-export default RepairDataTable;
+export default RepairTrayTable;

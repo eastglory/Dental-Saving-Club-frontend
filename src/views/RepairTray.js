@@ -12,16 +12,16 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
-import RepairDataTable from "components/Table/RepairDataTable.js"
+import RepairTrayTable from "components/Table/RepairTrayTable.js"
 
 const data={
     data :[
         {
             tray: 1,
             client: 0,
-            recId: "28-10-20226",
+            recId: "10-10-20226",
             notes: "",
-            receptionDate: "15-12-2021",
+            receptionDate: "12-12-2021",
             location: "BILLY",
             status: "UNDERREVIEW",
             followUp: "",
@@ -31,9 +31,9 @@ const data={
         {
             tray: 2,
             client: 1,
-            recId: "28-10-20227",
+            recId: "7-10-20227",
             notes: "SENSOR",
-            receptionDate: "15-12-2021",
+            receptionDate: "2-12-2021",
             location: "BILLY",
             status: "COMPLETED",
             followUp: "",
@@ -42,9 +42,9 @@ const data={
         },{
             tray: 3,
             client: 2,
-            recId: "28-10-20227",
+            recId: "5-10-20227",
             notes: "",
-            receptionDate: "15-13-2021",
+            receptionDate: "4-13-2021",
             location: "BILLY",
             status: "PENDING",
             followUp: "",
@@ -56,7 +56,7 @@ const data={
             client: 3,
             recId: "28-10-20226",
             notes: "",
-            receptionDate: "15-12-2021",
+            receptionDate: "7-12-2021",
             location: "BILLY",
             status: "QUOTED",
             followUp: "",
@@ -68,7 +68,7 @@ const data={
             client: 4,
             recId: "28-10-20226",
             notes: "",
-            receptionDate: "15-12-2021",
+            receptionDate: "2-12-2021",
             location: "BILLY",
             status: "UNDERREVIEW",
             followUp: "",
@@ -80,7 +80,7 @@ const data={
           client: 0,
           recId: "28-10-20226",
           notes: "",
-          receptionDate: "15-12-2021",
+          receptionDate: "3-12-2021",
           location: "BILLY",
           status: "UNDERREVIEW",
           followUp: "",
@@ -122,7 +122,7 @@ function RepairTray() {
                 <Card.Title as="h4">Repair Tray Status</Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
-                <RepairDataTable products={data}/>
+                <RepairTrayTable products={data}/>
               </Card.Body>
             </Card>
           </Col>

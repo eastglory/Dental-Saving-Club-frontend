@@ -41,7 +41,7 @@ const dashboardRoutes = [
     path: "/repairAuth",
     name: "Repair Authorization",
     icon: "nc-icon nc-check-2",
-    component: Dashboard,
+    component: RepairAuth,
     layout: "/admin"
   },
   {
