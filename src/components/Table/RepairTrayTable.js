@@ -58,13 +58,20 @@ const RepairTrayTable = (products) => {
         let _data = [...data];
         console.log(e)
         let {newData, index } = e;
-        _data[index] = {...newData, receptionDate: newData.receptionDate.toLocaleDateString()};
+        _data[index] = {
+            ...newData, 
+            recId: newData.receptionDate + newData.tray,
+        };
 
         setData(_data);
     }
 
     const textEditor = (options) => {
         return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} />;
+    }
+
+    const trayEditor = (options) => {
+        return <InputNumber value={options.value} onChange={(e) => options.editorCallback(e.value)} />;
     }
 
     const statusEditor = (options) => {
@@ -78,6 +85,7 @@ const RepairTrayTable = (products) => {
     }
     
     const clientEditor = (options) => {
+        console.log(options)
         return (
             <Dropdown value={options.value} options={clients} optionLabel="label" optionValue="value"
                 onChange={(e) => options.editorCallback(e.value)} placeholder="Select a Client"
@@ -98,7 +106,7 @@ const RepairTrayTable = (products) => {
     }
     const datePickerEditor = (options) => {
         return (
-            <Calendar value={new Date(options.value)} onChange={(e) => options.editorCallback(e.value)} />
+            <Calendar value={new Date(options.value)} onChange={(e) => {console.log(e);options.editorCallback(e.value.toLocaleDateString().replaceAll('/', '-'))} }/>
         )
     }
 
@@ -118,9 +126,9 @@ const RepairTrayTable = (products) => {
         <div className="datatable-editing-demo">
             <Toast ref={toast} />
                 <DataTable value={data} editMode="row" dataKey="id" onRowEditComplete={onRowEditComplete} resizableColumns columnResizeMode="expand" responsiveLayout="stack">
-                    <Column field="tray" header="Tray"  style={{ width: '2%' }}></Column>
+                    <Column field="tray" header="Tray"  editor={(options) => trayEditor(options)} ></Column>
                     <Column field="client" header="Client" body={clientBodyTemplate} editor={(options) => clientEditor(options)} ></Column>
-                    <Column field="recId" header="Rec ID" editor={(options) => textEditor(options)} ></Column>
+                    <Column field="recId" header="Rec ID" ></Column>
                     <Column field="notes" header="Notes" editor={(options) => textEditor(options)} ></Column>
                     <Column field="receptionDate" header="Reception Date" editor={(options) => datePickerEditor(options)} ></Column>
                     <Column field="location" header="Location" body={locationBodyTemplate} editor={(options) => locationEditor(options)} ></Column>
