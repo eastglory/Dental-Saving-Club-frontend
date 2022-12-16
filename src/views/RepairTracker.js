@@ -22,6 +22,7 @@ const data = {
   data: [
     {
       customerName: "Skippy Kerner",
+      product: 0,
       serial: "21105W0321",
       dop: "52635",
       received: "dop",
@@ -30,12 +31,12 @@ const data = {
       repairFeasability: 1,
       replacement: 0,
       remainingDay: "1Yr(s) & 12 Days over warranty",
-      toWarranty: 80,
-      curve: 100
+      toWarranty: 120,
     },
     
     {
       customerName: "Skippy Kerner",
+      product: 1,
       serial: "21105W0321",
       dop: "52635",
       received: "12-15-2022",
@@ -45,10 +46,10 @@ const data = {
       replacement: 1,
       remainingDay: "2Yr(s) & 321 Days over warranty",
       toWarranty: 45,
-      curve: 48
     },
     {
       customerName: "Kotelevskaya Elena",
+      product: 2,
       serial: "AD23FDF5",
       dop: "6526",
       received: "3-25-2022",
@@ -57,11 +58,11 @@ const data = {
       repairFeasability: 1,
       replacement: 1,
       remainingDay: "2Yr(s) & 219 Days over warranty",
-      toWarranty: 99,
-      curve: 49
+      toWarranty: 140,
     },
     {
       customerName: "Kotelevskaya Elena",
+      product: 3,
       serial: "AD23FDF5",
       dop: "6526",
       received: "3-25-2022",
@@ -71,10 +72,10 @@ const data = {
       replacement: 1,
       remainingDay: "1Yr(s) & 22 Days over warranty",
       toWarranty: 10,
-      curve: 44
     },
     {
       customerName: "Kotelevskaya Elena",
+      product: 4,
       serial: "AD23FDF5",
       dop: "6526",
       received: "3-25-2022",
@@ -84,7 +85,6 @@ const data = {
       replacement: 0,
       remainingDay: "3Yr(s) & 219 Days over warranty",
       toWarranty: 50,
-      curve: 33
     },
   ]
 }
@@ -161,7 +161,7 @@ function Dashboard() {
           <Col md="12">
             <Card className="card-plain table-plain-bg">
               <Card.Header>
-                <Card.Title as="h4">Repair Authorisation Table</Card.Title>
+                <Card.Title as="h4">Repair Tracker</Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <RepairTrackerTable data={data} />

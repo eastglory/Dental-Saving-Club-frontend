@@ -824,3 +824,9 @@
   padding-top: 0;
   padding-bottom: 0;
 }
+
+.progress-bar-label-overflow {
+  white-space: nowrap;
+  overflow: visible !important;
+  text-overflow: ellipsis;
+}
