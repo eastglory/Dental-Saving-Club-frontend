@@ -87,7 +87,7 @@ const RepairTrackerTable = (props) => {
         return (
             <ProgressBar className="bg-secondary">
                 <ProgressBar className="progress-bar-label-overflow" variant="success" label={`${100>rowData.toWarranty? rowData.toWarranty: 100}%`} now={(100 > rowData.toWarranty)? rowData.toWarranty / 1.5: 100 / 1.5} key={1} />
-                <ProgressBar className="progress-bar-label-overflow" variant="danger" label= {`${100>rowData.toWarranty? "": `${rowData.toWarranty-100}%`}`} now={(rowData.toWarranty - 100) / 1.5} key={2} />
+                <ProgressBar className="progress-bar-label-overflow" variant="danger" label= {`${100>rowData.toWarranty? "": `${rowData.toWarranty-100}%`}`} now={(100 > rowData.toWarranty)? 0: (rowData.toWarranty - 100) / 1.5} key={2} />
             </ProgressBar>
         )
     }
