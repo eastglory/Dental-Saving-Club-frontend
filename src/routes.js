@@ -21,6 +21,7 @@ import Maps from "views/Maps.js";
 import RepairTracker from "views/RepairTracker.js";
 import RepairAuth from "views/RepairAuth.js"
 import RepairTray from "views/RepairTray.js";
+import Customer from "views/Customer.js";
 
 const dashboardRoutes = [
   {
@@ -55,14 +56,14 @@ const dashboardRoutes = [
     path: "/repairTracker",
     name: "Repair Tracker",
     icon: "nc-icon nc-watch-time",
-    component: Dashboard,
+    component: RepairTracker,
     layout: "/admin"
   },
   {
     path: "/customers",
     name: "Customers",
     icon: "nc-icon nc-circle-09",
-    component: Dashboard,
+    component: customer,
     layout: "/admin"
   },
   {
