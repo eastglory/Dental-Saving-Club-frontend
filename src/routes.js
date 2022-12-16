@@ -63,7 +63,7 @@ const dashboardRoutes = [
     path: "/customers",
     name: "Customers",
     icon: "nc-icon nc-circle-09",
-    component: customer,
+    component: Customer,
     layout: "/admin"
   },
   {
