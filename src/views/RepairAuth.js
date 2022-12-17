@@ -101,7 +101,7 @@ function RepairAuth() {
                 <Card.Title className="text-center d-" as="h4">Commnication Log & Repair Authorization</Card.Title>
                 <InputGroup size="sm" className="mb-3 mx-auto pt-2 w-25">
                   <InputGroup.Text id="basic-addon1" className="p-0 bg-white border-0">Recieved on: </InputGroup.Text>
-                  <Calendar  inputStyle={{padding: 0, "max-width":"8rem" }}value={new Date()}></Calendar>
+                  <Calendar  inputStyle={{padding: 0, "maxWidth":"8rem" }}value={new Date()}></Calendar>
                   <Form.Control />
                 </InputGroup>
               </Card.Header>

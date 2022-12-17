@@ -22,6 +22,7 @@ import RepairTracker from "views/RepairTracker.js";
 import RepairAuth from "views/RepairAuth.js"
 import RepairTray from "views/RepairTray.js";
 import Customer from "views/Customer.js";
+import RepairJournal from "views/RepairJournal";
 
 const dashboardRoutes = [
   {
@@ -49,7 +50,7 @@ const dashboardRoutes = [
     path: "/repairJournal",
     name: "Repair Journal",
     icon: "nc-icon nc-settings-90",
-    component: Dashboard,
+    component: RepairJournal,
     layout: "/admin"
   },
   {
@@ -64,20 +65,6 @@ const dashboardRoutes = [
     name: "Customers",
     icon: "nc-icon nc-circle-09",
     component: Customer,
-    layout: "/admin"
-  },
-  {
-    path: "/report",
-    name: "Report",
-    icon: "nc-icon nc-notes",
-    component: Dashboard,
-    layout: "/admin"
-  },
-  {
-    path: "/analysis",
-    name: "Analysis",
-    icon: "nc-icon nc-chart-bar-32",
-    component: Dashboard,
     layout: "/admin"
   },
 ];

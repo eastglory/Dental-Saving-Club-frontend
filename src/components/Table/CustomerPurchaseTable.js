@@ -8,7 +8,7 @@ import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { Badge } from 'react-bootstrap';
 
-const CustomerServiceTable = (props) => {
+const CustomerPurchaseTable = (props) => {
     const [data, setData] = useState(null);
     const toast = useRef(null);
 
@@ -22,17 +22,17 @@ const CustomerServiceTable = (props) => {
             <Toast ref={toast} />
                 <DataTable value={data} resizableColumns columnResizeMode="expand" responsiveLayout="stack">
                     <Column field="id" header="ID" ></Column>
-                    <Column field="recievedOn" header="Recieved On"></Column>
-                    <Column field="handledOn" header="Handled On"></Column>
-                    <Column field="reportedOn" header="Reported On"></Column>
+                    <Column field="purchasedOn" header="Purchased On"></Column>
+                    <Column field="category" header="Category"></Column>
                     <Column field="invoice" header="Invoice"  ></Column>
                     <Column field="serial" header="Serial"></Column>
-                    <Column field="product" header="Product"></Column>
+                    <Column field="note1" header="Note1"></Column>
+                    <Column field="note2" header="Note2"></Column>
                 </DataTable>
         </div>
     )
     
 }
 
-export default CustomerServiceTable;
+export default CustomerPurchaseTable;
 
