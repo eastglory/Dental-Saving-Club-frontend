@@ -42,7 +42,7 @@ const RepairTrayTable = () => {
             .then(res => {setData(res.data)})
             .catch(err => console.log(err) )
         
-        axios.get('http://localhost:4000/getallclients')
+        axios.get('https://dscbackend.onrender.com/getallclients')
             .then(res => {setClients(res.data)})
             .catch(err => console.log(err))
     }, [])
