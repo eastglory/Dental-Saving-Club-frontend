@@ -1,21 +1,16 @@
 {
-  "name": "dental-saving-club-frontend",
+  "name": "light-bootstrap-dashboard-react",
   "version": "2.0.1",
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.15.2",
-    "@fortawesome/fontawesome-svg-core": "^6.2.1",
-    "@fortawesome/free-solid-svg-icons": "^6.2.1",
-    "@fortawesome/react-fontawesome": "^0.2.0",
-    "@ramonak/react-progress-bar": "^5.0.3",
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/lab": "^4.0.0-alpha.61",
     "bootstrap": "4.6.0",
-    "chartist": "0.11.4",
-    "country-state-city": "^3.1.2",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.9",
-    "primereact": "^8.7.3",
-    "react": ">=16.8.0",
+    "react": "18.2.0",
     "react-bootstrap": "2.4.0",
-    "react-dom": ">=16.8.0",
+    "react-dom": "18.2.0",
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
     "react-scripts": "5.0.1",
@@ -37,10 +32,6 @@
     "minify:scss": "sass src/assets/scss/light-bootstrap-dashboard-pro-react.scss src/assets/css/light-bootstrap-dashboard-pro-react.min.css --style compressed",
     "build:scss": "npm run compile:scss && npm run minify:scss"
   },
-  "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -54,6 +45,10 @@
     ]
   },
   "devDependencies": {
-    "primeicons": "^6.0.1"
+    "@ramonak/react-progress-bar": "^5.0.3",
+    "axios": "^1.2.1",
+    "country-state-city": "^3.1.2",
+    "primeicons": "^6.0.1",
+    "primereact": "^8.7.3"
   }
 }
