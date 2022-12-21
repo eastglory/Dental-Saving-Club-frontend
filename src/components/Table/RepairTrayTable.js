@@ -35,16 +35,18 @@ const RepairTrayTable = () => {
     }]);
     const [editingRows, setEditingRows] = useState({});
     const toast = useRef(null);
+    const [loading, setLoading] = useState(true)
 
 
     useEffect(() => {
         axios.get('https://dscbackend.onrender.com/getalltray')
-            .then(res => {setData(res.data)})
+            .then(res => {setData(res.data); setLoading(false)})
             .catch(err => console.log(err) )
         
         axios.get('https://dscbackend.onrender.com/getallclients')
             .then(res => {setClients(res.data)})
             .catch(err => console.log(err))
+
     }, [])
 
     const paginatorLeft = <Button type="button" icon="pi pi-refresh" className="p-button-text" />;
@@ -78,6 +80,7 @@ const RepairTrayTable = () => {
 
     const onRowEditComplete = async (e) => {
         const { newData } = e
+        setLoading(true)
         await axios.post('https://dscbackend.onrender.com/settray', 
                 {...newData, recId: newData.receptionDate + newData.tray}
             )
@@ -89,6 +92,7 @@ const RepairTrayTable = () => {
                 toast.current.show({severity: 'error', summary: 'Error!', detail: `${err}`})
                 console.log(err)
             })
+        setLoaindg(false)
     }
 
     const textEditor = (options) => {
@@ -165,15 +169,17 @@ const RepairTrayTable = () => {
                 currentPageReportTemplate="Shwoing {first} to {last} of {totalRecords}" rows={5} rowsPerPageOptions={[5,10,20,50]}
                 paginatorLeft={paginatorLeft}
                 paginatorRight={paginatorRight}
+                loading={loading}
+                filterDisplay="row"
             >
-                <Column field="tray" header="Tray"  editor={(options) => trayEditor(options)} ></Column>
-                <Column field="client" header="Client" editor={(options) => clientEditor(options)} ></Column>
-                <Column field="recId" header="Rec ID" ></Column>
-                <Column field="notes" header="Notes" editor={(options) => textEditor(options)} ></Column>
-                <Column field="receptionDate" header="Reception Date" editor={(options) => datePickerEditor(options)} ></Column>
-                <Column field="location" header="Location" body={locationBodyTemplate} editor={(options) => locationEditor(options)} ></Column>
-                <Column field="status" header="Status" body={statusBodyTemplate} editor={(options) => statusEditor(options)} ></Column>
-                <Column field="followUp" header="Follow Up" editor={(options) => textEditor(options)} ></Column>
+                <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="tray" header="Tray"  editor={(options) => trayEditor(options)} ></Column>
+                <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="client" header="Client" editor={(options) => clientEditor(options)} ></Column>
+                <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="recId" header="Rec ID" ></Column>
+                <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="notes" header="Notes" editor={(options) => textEditor(options)} ></Column>
+                <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="receptionDate" header="Reception Date" editor={(options) => datePickerEditor(options)} ></Column>
+                <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="location" header="Location" body={locationBodyTemplate} editor={(options) => locationEditor(options)} ></Column>
+                <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="status" header="Status" body={statusBodyTemplate} editor={(options) => statusEditor(options)} ></Column>
+                <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="followUp" header="Follow Up" editor={(options) => textEditor(options)} ></Column>
                 <Column header="Edit" rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
             </DataTable>
         </div>
