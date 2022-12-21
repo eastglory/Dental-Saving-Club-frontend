@@ -92,7 +92,7 @@ const RepairTrayTable = () => {
                 toast.current.show({severity: 'error', summary: 'Error!', detail: `${err}`})
                 console.log(err)
             })
-        setLoaindg(false)
+        setLoading(false)
     }
 
     const textEditor = (options) => {
