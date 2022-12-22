@@ -18,6 +18,7 @@ import {
 import { Calendar } from 'primereact/calendar'
 import { Dropdown } from "primereact/dropdown";
 import { InputTextarea} from"primereact/inputtextarea"
+import { InputMask } from "primereact/inputmask"
 import RepairAuthTable from "components/Table/RepairAuthTable";
 
 const data = {
@@ -90,6 +91,7 @@ function RepairAuth() {
   const [status, setStatus] = useState(null);
   const [reporter, setReporter] = useState(null);
   const [instruction, setInstruction] = useState(null);
+  const [recId, setRecId] = useState(null)
 
   return (
     <>
@@ -97,13 +99,21 @@ function RepairAuth() {
         <Row>
           <Col md="12">
             <Card className="strpied-tabled-with-hover">
-              <Card.Header>
-                <Card.Title className="text-center d-" as="h4">Commnication Log & Repair Authorization</Card.Title>
-                <InputGroup size="sm" className="mb-3 mx-auto pt-2 w-25">
+              <Card.Header className="d-flex flex-column justify-content-center">
+                <Card.Title className="text-center" as="h4">Commnication Log & Repair Authorization</Card.Title>
+                <InputMask 
+                  className="mx-auto mt-3 text-center" 
+                  mask="99-99-999999999" 
+                  value={recId} 
+                  placeholder="12-12-202242" 
+                  slotChar="mm-dd-yyyyn    " 
+                  onChange={(e) => {console.log(e); setRecId(e.value)}}
+                ></InputMask>
+                {/* <InputGroup size="sm" className="mb-3 mx-auto pt-2 w-25">
                   <InputGroup.Text id="basic-addon1" className="p-0 bg-white border-0">Recieved on: </InputGroup.Text>
                   <Calendar  inputStyle={{padding: 0, "maxWidth":"8rem" }}value={new Date()}></Calendar>
                   <Form.Control />
-                </InputGroup>
+                </InputGroup> */}
               </Card.Header>
                 <hr></hr>
               <Card.Body className="table-full-width table-responsive px-0">

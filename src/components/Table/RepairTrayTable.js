@@ -87,12 +87,12 @@ const RepairTrayTable = () => {
             .then(res => {
                 setData(res.data)
                 toast.current.show({severity: 'success', summary: 'Updated Successfully!', detail: `${newData}`})
+                setLoading(false)
             })
             .catch(err => {
                 toast.current.show({severity: 'error', summary: 'Error!', detail: `${err}`})
                 console.log(err)
             })
-        setLoading(false)
     }
 
     const textEditor = (options) => {
