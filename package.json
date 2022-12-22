@@ -8,6 +8,8 @@
     "bootstrap": "4.6.0",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.9",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "react": "18.2.0",
     "react-bootstrap": "2.4.0",
     "react-dom": "18.2.0",

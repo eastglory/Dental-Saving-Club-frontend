@@ -19,7 +19,10 @@ import { Calendar } from 'primereact/calendar'
 import { Dropdown } from "primereact/dropdown";
 import { InputTextarea} from"primereact/inputtextarea"
 import { InputMask } from "primereact/inputmask"
+import { InputText } from 'primereact/inputtext'
 import RepairAuthTable from "components/Table/RepairAuthTable";
+import JsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 
 
 
@@ -55,6 +58,7 @@ function RepairAuth() {
   const [instruction, setInstruction] = useState(null);
   const [recId, setRecId] = useState(null)
   const [searchLoading, setSearchLoading] = useState(false)
+  const [saving, setSaving] = useState(false)
   const [client, setClient] = useState(null)
 
   const searchByRecId = () => {
@@ -64,39 +68,52 @@ function RepairAuth() {
     console.log(clients)
     const tray = JSON.parse(localStorage.getItem("tray"))
     console.log(tray)
-    const result = tray.find(item => item.recId == recId.trim())
+    const result = tray.find(item => item.recId == recId)
     console.log(result)
-    const client = clients.find(client => client.name.toUpperCase() == result.client)
-    const clientData = {
-      "Customer Name": client.name,
-      "Country": client.country,
-      "Province/City": `${client.city}, ${client.province}`,
-      "Street": client.street,
-      "Postal code": client.postal,
-      "Telephone": client.phone
-    }
-    setClient(clientData)
+    if(result)
+      {
+        const client = clients.find(client => client.name.toUpperCase() == result.client)
+        const clientData = {
+          "Customer Name": client.name,
+          "Country": client.country,
+          "Province/City": `${client.city}, ${client.province}`,
+          "Street": client.street,
+          "Postal code": client.postal,
+          "Telephone": client.phone
+        }
+        setClient(clientData)}
+      else setClient(null)
     setSearchLoading(false)
   }
 
+  const export2Pdf = async () => {
+    setSaving(true)
+    const pdf = new JsPDF('portrait', 'pt', 'a4')
+    const data = await html2canvas(document.querySelector('#AuthReport'))
+    const img = data.toDataURL("image/png")
+    const imgProperties = pdf.getImageProperties(img)
+    const pdfWidth = pdf.internal.pageSize.getWidth(img)
+    const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width
+    pdf.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight)
+    pdf.save('RepairAuth.pdf')
+    setSaving(false)
+  }
+
   return (
-    <>
+    <div >
       <Container fluid>
-        <Row>
+        <Row id="AuthReport">
           <Col md="12">
             <Card className="strpied-tabled-with-hover">
               <Card.Header className="d-flex flex-column justify-content-center">
                 <Card.Title className="text-center" as="h4">Commnication Log & Repair Authorization</Card.Title>
                 <div className="d-flex flex-row mx-auto  mt-3 ">
-                  <InputMask 
+                  <InputText
                     className="text-center" 
-                    mask="99-99-999999999" 
                     value={recId} 
                     placeholder="Type Rec Id..." 
-                    slotChar="mm-dd-yyyyn    " 
-                    autoClear={false}
-                    onChange={(e) => { setRecId(e.value)}}
-                  ></InputMask>
+                    onChange={(e) => {setRecId(e.target.value)}}
+                  ></InputText>
                   <Button label="Search" loading={searchLoading} onClick={searchByRecId}/>
                 </div>
                 
@@ -160,26 +177,37 @@ function RepairAuth() {
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <RepairAuthTable  />
-                <div className="pt-2 d-flex flex-row align-items-center">
-                  <label className="font-weight-bold text-dark col-sm-2 ">Signature: </label>
-                  <Form.Control className="border-bottom w-25"/>
-                  <label className="font-weight-bold text-dark ml-5 mr-3">Date:</label>
-                  <Calendar value={new Date()}></Calendar>
-                </div>
-                <div className="pt-2 d-flex flex-row align-items-center">
-                  <label className="font-weight-bold text-dark col-sm-2 ">Serviced By: </label>
-                  <Form.Control className="border-bottom w-25"/>
-                  <label className="font-weight-bold text-dark ml-5 mr-3">Date:</label>
-                  <Calendar value={new Date()}></Calendar>
-                  <label className="font-weight-bold text-dark ml-5 mr-3 ">ID: </label>
-                  <Form.Control className="border-bottom w-25"/>
-                </div>
+                
               </Card.Body>
             </Card>
           </Col>
+          <Col md="12" className="d-flex flex-row justify-content-end">
+            <Card.Body>
+              <div className="pt-2 d-flex flex-row align-items-center">
+                <label className="font-weight-bold text-dark col-sm-2 ">Signature: </label>
+                <Form.Control className="border-bottom w-25"/>
+                <label className="font-weight-bold text-dark ml-5 mr-3">Date:</label>
+                <Calendar value={new Date()}></Calendar>
+              </div>
+              <div className="pt-2 d-flex flex-row align-items-center">
+                <label className="font-weight-bold text-dark col-sm-2 ">Serviced By: </label>
+                <Form.Control className="border-bottom w-25"/>
+                <label className="font-weight-bold text-dark ml-5 mr-3">Date:</label>
+                <Calendar value={new Date()}></Calendar>
+                <label className="font-weight-bold text-dark ml-5 mr-3 ">ID: </label>
+                <Form.Control className="border-bottom w-25"/>
+              </div>
+            </Card.Body>
+          </Col>
+          
         </Row>
+        <Col md="12" className="d-flex flex-row justify-content-end">
+            <Button className="mx-3" label="Save" loading={saving} onClick={export2Pdf}/>
+            <Button className="mx-3" label="Email" loading={searchLoading} />
+            <Button className="mx-3" label="Print" loading={searchLoading} />
+          </Col>
       </Container>
-    </>
+    </div>
   );
 }
 
