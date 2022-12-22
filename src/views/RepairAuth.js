@@ -94,7 +94,10 @@ function RepairAuth() {
         const tray = yeartray.slice(4)
         setSplitRecId(`Received On: ${mon}-${day}-${year}, Tray-${tray}`)
       }
-      else setClient(null)
+      else {
+        setClient(null)
+        setSplitRecId("")
+      }
     setSearchLoading(false)
   }
 
