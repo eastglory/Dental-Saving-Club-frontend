@@ -3,7 +3,6 @@ import React, {useState} from "react";
 // react-bootstrap components
 import {
   Badge,
-  Button,
   Card,
   Navbar,
   Nav,
@@ -15,52 +14,15 @@ import {
   InputGroup,
   Form
 } from "react-bootstrap";
+import { Button } from 'primereact/button'
 import { Calendar } from 'primereact/calendar'
 import { Dropdown } from "primereact/dropdown";
 import { InputTextarea} from"primereact/inputtextarea"
 import { InputMask } from "primereact/inputmask"
 import RepairAuthTable from "components/Table/RepairAuthTable";
 
-const data = {
-  data: [
-    {
-      description: 0,
-      serial: "21105W0321",
-      invoice: "52635",
-      dop: "dop",
-      warranty: 1,
-      cost: 1,
-      authorised: 0
-    },
-    {
-      description: 2,
-      serial: "ADF5DS",
-      invoice: "65235",
-      dop: "dop",
-      warranty: 2,
-      cost: 2,
-      authorised: 1
-    },
-    {
-      description: 3,
-      serial: "ADF6DSF",
-      invoice: "13531",
-      dop: "dop",
-      warranty: 2,
-      cost: 1,
-      authorised: 2
-    },
-  ]
-}
 
-const customerData = {
-  "Customer Name": "123 - Taunton Village Dental",
-  "Send to(Location)": "210 Taunton Rd E",
-  "Province/City": "Oshawa, ON",
-  "Postal code": "L1K 1A8",
-  "Telephone": "(905) 432-5000",
-  "Email": "example@ex.com"
-}
+
 const statuses = [
   { label: "Completed", value: "COMPLETED", badge: "success"},
   { label: "Under Review", value: "UNDERREVIEW", badge: "warning"},
@@ -92,6 +54,30 @@ function RepairAuth() {
   const [reporter, setReporter] = useState(null);
   const [instruction, setInstruction] = useState(null);
   const [recId, setRecId] = useState(null)
+  const [searchLoading, setSearchLoading] = useState(false)
+  const [client, setClient] = useState(null)
+
+  const searchByRecId = () => {
+    setSearchLoading(true)
+    console.log(recId)
+    const clients = JSON.parse(localStorage.getItem("clients"))
+    console.log(clients)
+    const tray = JSON.parse(localStorage.getItem("tray"))
+    console.log(tray)
+    const result = tray.find(item => item.recId == recId.trim())
+    console.log(result)
+    const client = clients.find(client => client.name.toUpperCase() == result.client)
+    const clientData = {
+      "Customer Name": client.name,
+      "Country": client.country,
+      "Province/City": `${client.city}, ${client.province}`,
+      "Street": client.street,
+      "Postal code": client.postal,
+      "Telephone": client.phone
+    }
+    setClient(clientData)
+    setSearchLoading(false)
+  }
 
   return (
     <>
@@ -101,14 +87,19 @@ function RepairAuth() {
             <Card className="strpied-tabled-with-hover">
               <Card.Header className="d-flex flex-column justify-content-center">
                 <Card.Title className="text-center" as="h4">Commnication Log & Repair Authorization</Card.Title>
-                <InputMask 
-                  className="mx-auto mt-3 text-center" 
-                  mask="99-99-999999999" 
-                  value={recId} 
-                  placeholder="12-12-202242" 
-                  slotChar="mm-dd-yyyyn    " 
-                  onChange={(e) => {console.log(e); setRecId(e.value)}}
-                ></InputMask>
+                <div className="d-flex flex-row mx-auto  mt-3 ">
+                  <InputMask 
+                    className="text-center" 
+                    mask="99-99-999999999" 
+                    value={recId} 
+                    placeholder="Type Rec Id..." 
+                    slotChar="mm-dd-yyyyn    " 
+                    autoClear={false}
+                    onChange={(e) => { setRecId(e.value)}}
+                  ></InputMask>
+                  <Button label="Search" loading={searchLoading} onClick={searchByRecId}/>
+                </div>
+                
                 {/* <InputGroup size="sm" className="mb-3 mx-auto pt-2 w-25">
                   <InputGroup.Text id="basic-addon1" className="p-0 bg-white border-0">Recieved on: </InputGroup.Text>
                   <Calendar  inputStyle={{padding: 0, "maxWidth":"8rem" }}value={new Date()}></Calendar>
@@ -117,18 +108,21 @@ function RepairAuth() {
               </Card.Header>
                 <hr></hr>
               <Card.Body className="table-full-width table-responsive px-0">
-                <Table className='w-50'>
-                  <tbody>
-                    {Object.keys(customerData).map(item => {
-                      return (
-                        <tr key={item}>
-                          <td  className="font-weight-bold border-0 ">{item}</td>
-                          <td  className="border-0">{customerData[item]}</td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </Table>
+                {client?
+                  (<Table className='w-50'>
+                    <tbody>
+                      {Object.keys(client).map(item => {
+                        return (
+                          <tr key={item}>
+                            <td  className="font-weight-bold border-0 ">{item}</td>
+                            <td  className="border-0">{client[item]}</td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </Table>):
+                  <h3 className="text-center">Not Found</h3>
+                } 
                 <div className="pt-5 d-flex flex-row align-items-center">
                   <label className="font-weight-bold text-dark col-sm-2 ">Quote On: </label>
                   <Calendar value={new Date()}></Calendar>
@@ -165,7 +159,7 @@ function RepairAuth() {
                 <Card.Title as="h4">Repair Authorisation Table</Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
-                <RepairAuthTable data={data} />
+                <RepairAuthTable  />
                 <div className="pt-2 d-flex flex-row align-items-center">
                   <label className="font-weight-bold text-dark col-sm-2 ">Signature: </label>
                   <Form.Control className="border-bottom w-25"/>

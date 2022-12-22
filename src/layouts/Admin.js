@@ -22,6 +22,7 @@ import AdminNavbar from "components/Navbars/AdminNavbar";
 import Footer from "components/Footer/Footer";
 import Sidebar from "components/Sidebar/Sidebar";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
+import axios from "axios";
 
 import routes from "routes.js";
 
@@ -48,6 +49,17 @@ function Admin() {
       }
     });
   };
+  React.useEffect(() => {
+    console.log("Getting Data")
+    axios.get('https://dscbackend.onrender.com/getalltray')
+            .then(res => {localStorage.setItem('tray', JSON.stringify(res.data))})
+            .catch(err => console.log(err) )
+        
+        axios.get('https://dscbackend.onrender.com/getallclients')
+            .then(res => localStorage.setItem('clients', JSON.stringify(res.data)))
+            .catch(err => console.log(err))
+  }, [])
+
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;

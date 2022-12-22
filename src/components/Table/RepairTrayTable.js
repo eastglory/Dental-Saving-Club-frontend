@@ -39,13 +39,19 @@ const RepairTrayTable = () => {
 
 
     useEffect(() => {
-        axios.get('https://dscbackend.onrender.com/getalltray')
-            .then(res => {setData(res.data); setLoading(false)})
-            .catch(err => console.log(err) )
+        // axios.get('https://dscbackend.onrender.com/getalltray')
+        //     .then(res => {setData(res.data); setLoading(false)})
+        //     .catch(err => console.log(err) )
         
-        axios.get('https://dscbackend.onrender.com/getallclients')
-            .then(res => {setClients(res.data)})
-            .catch(err => console.log(err))
+        // axios.get('https://dscbackend.onrender.com/getallclients')
+        //     .then(res => {setClients(res.data)})
+        //     .catch(err => console.log(err))
+
+        const tray = JSON.parse(localStorage.getItem('tray'))
+        const clientsData = JSON.parse(localStorage.getItem('clients'))
+        if(tray) setData(tray)
+        if(clientsData) setClients(clientsData)
+        setLoading(false)
 
     }, [])
 
@@ -82,9 +88,10 @@ const RepairTrayTable = () => {
         const { newData } = e
         setLoading(true)
         await axios.post('https://dscbackend.onrender.com/settray', 
-                {...newData, recId: newData.receptionDate + newData.tray}
+                {...newData, recId: newData.receptionDate.replace(/(..)\-(..)\-(....)/, "$2-$1-$3") + newData.tray}
             )
             .then(res => {
+                localStorage.setItem('tray', JSON.stringify(res.data))
                 setData(res.data)
                 toast.current.show({severity: 'success', summary: 'Updated Successfully!', detail: `${newData}`})
                 setLoading(false)

@@ -7,43 +7,58 @@ import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { Badge } from 'react-bootstrap';
+import { Calendar } from 'primereact/calendar'
 
-const RepairAuthTable = (props) => {
+const RepairAuthTable = () => {
+    const tableData = [
+            {
+                description: null,
+                serial: null,
+                invoice: null,
+                dop: null,
+                warranty: null,
+                cost: null,
+                authorised: null
+            }
+        ]
     const [data, setData] = useState(null);
     const toast = useRef(null);
 
     useEffect(() => {
-        console.log(props.data.data)
-        setData(props.data.data);
+        setData(tableData);
     }, [])
 
     // const columns = Object.keys(props.data[1]).map(key => {return {filed: key, header: key.toUpperCase()}});
 
     const descriptions = [
-        { label: "MP5", value: 0},
-        { label: "Light Gen", value: 1},
+        { label: "MP5", value: "MP5"},
+        { label: "Light Gen", value: "Light Gen"},
         { label: "6 PIN", value: 2},
-        { label: "5 PIN", value: 3},
-        { label: "WolfLight", value: 4}
+        { label: "5 PIN", value: "5 PIN"},
+        { label: "WolfLight", value: "WolfLight"},
+        { label: "", value: null}
     ]
 
     const warranties = [
-        { label: "Yes", value: 0 },
-        { label: "No", value: 1},
-        { label: "WillBuyNow", value: 2},
+        { label: "Yes", value: "Yes" },
+        { label: "No", value: "No"},
+        { label: "WillBuyNow", value: "WillBuyNow"},
+        { label: "", value: null}
     ]
 
     const costs = [
-        { label: "Under paid repair", value: 0 },
-        { label: "To be determined", value: 1},
-        { label: "No charge", value: 2},
+        { label: "Under paid repair", value: "Under paid repair" },
+        { label: "To be determined", value: "To be determined"},
+        { label: "No charge", value: "No charge"},
+        { label: "", value: null}
     ]
 
     const authorisedList = [
-        { label: "Pending", value: 0 },
-        { label: "Authorised", value: 1},
-        { label: "No-return as is", value: 2},
-        { label: "No-will buy new", value: 3},
+        { label: "Pending", value: "Pending" },
+        { label: "Authorised", value: "Authorised"},
+        { label: "No-return as is", value: "No-return as is"},
+        { label: "No-will buy new", value: "No-will buy new"},
+        { label: "", value: null}
     ]
 
     const getDescriptionLabel = (description) => {
@@ -81,6 +96,24 @@ const RepairAuthTable = (props) => {
         _data[index] = newData;
 
         setData(_data);
+    }
+
+    const addRow = () => {
+        let _data = [...data];
+        _data.push({
+            description: null,
+            serial: null,
+            invoice: null,
+            dop: null,
+            warranty: null,
+            cost: null,
+            authorised: null
+        })
+        setData(_data)
+    }
+
+    const textEditor = (options) => {
+        return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value || "")} />;
     }
 
     const descriptionEditor = (options) => {
@@ -121,20 +154,37 @@ const RepairAuthTable = (props) => {
                 }} />
         );
     }
+    const datePickerEditor = (options) => {
+        return (
+            <Calendar className="mw-100" value={new Date(options.value || "")} onChange={(e) => {options.editorCallback(e.value.toLocaleDateString().replaceAll('/', '-'))} }/>
+        )
+    }
+
+    
 
     return (
         <div className="datatable-editing-demo">
             <Toast ref={toast} />
-                <DataTable value={data} editMode="row" dataKey="id" onRowEditComplete={onRowEditComplete} resizableColumns columnResizeMode="expand" responsiveLayout="stack">
+                <DataTable 
+                    value={data} 
+                    editMode="row" 
+                    dataKey="id" 
+                    onRowEditComplete={onRowEditComplete} 
+                    resizableColumns 
+                    columnResizeMode="expand" 
+                    responsiveLayout="stack" 
+                >
                     <Column field="description" header="Description" body={descriptionBodyTemplate} editor={(options) => descriptionEditor(options)}></Column>
-                    <Column field="serial" header="Serial"></Column>
-                    <Column field="invoice" header="Invoice"  ></Column>
-                    <Column field="dop" header="D.O.P" ></Column>
+                    <Column field="serial" header="Serial" editor={(options => textEditor(options))}></Column>
+                    <Column field="invoice" header="Invoice" editor={(options => textEditor(options))} ></Column>
+                    <Column field="dop" style={{"minWidth": '200px'}} header="D.O.P" editor={(options => datePickerEditor(options))} ></Column>
                     <Column field="warranty" header="Warranty" body={warrantyBodyTemplate} editor={(options) => warrantyEditor(options)} ></Column>
                     <Column field="cost" header="Cost" body={costBodyTemplate} editor={(options) => costEditor(options)} ></Column>
                     <Column field="authorised" header="Repair(s) Authorised" body={authorisedBodyTemplate} editor={(options) => authorisedEditor(options)} ></Column>
                     <Column header="Edit" rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                 </DataTable>
+                <Button icon="pi pi-plus" className="mt-0 w-100 p-button-raised p-button-text p-button-sm radius-0" onClick={addRow}/>
+                
         </div>
     )
     
