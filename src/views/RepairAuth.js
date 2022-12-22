@@ -60,9 +60,16 @@ function RepairAuth() {
   const [searchLoading, setSearchLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [client, setClient] = useState(null)
+  const [splitRecId, setSplitRecId] = useState("")
 
   const searchByRecId = () => {
     setSearchLoading(true)
+    setSelectValue1(null);
+    setSelectValue2(null);
+    setStatus(null);
+    setReporter(null);
+    setInstruction(null);
+
     console.log(recId)
     const clients = JSON.parse(localStorage.getItem("clients"))
     console.log(clients)
@@ -81,7 +88,12 @@ function RepairAuth() {
           "Postal code": client.postal,
           "Telephone": client.phone
         }
-        setClient(clientData)}
+        setClient(clientData)
+        const [mon, day, yeartray] = recId.split('-')
+        const year = yeartray.slice(0,4)
+        const tray = yeartray.slice(4)
+        setSplitRecId(`Received On: ${mon}-${day}-${year}, Tray-${tray}`)
+      }
       else setClient(null)
     setSearchLoading(false)
   }
@@ -107,7 +119,7 @@ function RepairAuth() {
             <Card className="strpied-tabled-with-hover">
               <Card.Header className="d-flex flex-column justify-content-center">
                 <Card.Title className="text-center" as="h4">Commnication Log & Repair Authorization</Card.Title>
-                <div className="d-flex flex-row mx-auto  mt-3 ">
+                <div className="d-flex flex-row mx-auto mt-3 ">
                   <InputText
                     className="text-center" 
                     value={recId} 
@@ -116,6 +128,7 @@ function RepairAuth() {
                   ></InputText>
                   <Button label="Search" loading={searchLoading} onClick={searchByRecId}/>
                 </div>
+                <p className="text-right mb-0">{splitRecId}</p>
                 
                 {/* <InputGroup size="sm" className="mb-3 mx-auto pt-2 w-25">
                   <InputGroup.Text id="basic-addon1" className="p-0 bg-white border-0">Recieved on: </InputGroup.Text>
