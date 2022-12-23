@@ -113,14 +113,7 @@ const descriptions = [
 const warranties = [
     { label: "Yes", value: "Yes" },
     { label: "No", value: "No"},
-    { label: "WillBuyNow", value: "WillBuyNow"},
-    { label: "", value: null}
-]
-
-const costs = [
-    { label: "Under paid repair", value: "Under paid repair" },
-    { label: "To be determined", value: "To be determined"},
-    { label: "No charge", value: "No charge"},
+    { label: "Ext.Warranty", value: "ExtWarranty"},
     { label: "", value: null}
 ]
 
@@ -140,36 +133,18 @@ const RepairAuthTable = () => {
                 invoice: null,
                 dop: "",
                 warranty: null,
-                cost: null,
+                cost: 0,
                 authorised: null
             }
         ]
     const [data, setData] = useState(null);
-    const [selectedDescription, setSelectedDescription] = useState(null)
-    const [filteredDescriptoin, setFilteredDescription] = useState(null)
+    const [costEditorDisabled, setCostEditorDisabled] = useState(true)
+    const [totalCost, setTotalCost] = useState(0)
     const toast = useRef(null);
 
     useEffect(() => {
         setData(tableData);
     }, [])
-
-    const searchDescription = (e) =>{
-        console.log("search event")
-        setTimeout(() => {
-            let _filteredDescription
-            if (!e.query.trim().length) {
-                _filteredDescription = [ ...descriptions ]
-            }
-            else {
-                _filteredDescription = descriptions.filter((description) => {
-                    return description.label.toLowerCase().search(e.query.toLowerCase()) &&
-                            description.description.toLowerCase().search(e.query.toLowerCase())
-                })
-            }
-
-            setFilteredDescription(_filteredDescription)
-        }, 250)
-    }
 
  
 
@@ -187,9 +162,6 @@ const RepairAuthTable = () => {
         return costs.find(item => item.value === cost).label;
     }
 
-    const costBodyTemplate = (rowData) => {
-        return getCostLabel(rowData.cost);
-    }
     const getAuthorisedLabel = (authorised) => {
         return authorisedList.find(item => item.value === authorised).label;
     }
@@ -204,18 +176,22 @@ const RepairAuthTable = () => {
 
         _data[index] = newData;
 
+        let _totalCost = 0
+        _data.forEach((data) => _totalCost += data.cost)
+
+        setTotalCost(_totalCost)
         setData(_data);
     }
 
     const addRow = () => {
         let _data = [...data];
         _data.push({
-            description: null,
+            description: "",
             serial: null,
             invoice: null,
             dop: "",
             warranty: null,
-            cost: null,
+            cost: 0,
             authorised: null
         })
         setData(_data)
@@ -242,24 +218,21 @@ const RepairAuthTable = () => {
     }
     
     const warrantyEditor = (options) => {
+        const onChangeHandler = (e) => {
+            if(e.value == "No") setCostEditorDisabled(false)
+            else setCostEditorDisabled(true)
+            options.editorCallback(e.value)
+        }
         return (
             <Dropdown value={options.value} options={warranties} optionLabel="label" optionValue="value"
-                onChange={(e) => options.editorCallback(e.value)} placeholder="Select a warranty"
+                onChange={onChangeHandler} placeholder="Select a warranty"
                 itemTemplate={(option) => {
                     return <span>{option.label}</span>
                 }} />
         );
     }
 
-    const costEditor = (options) => {
-        return (
-            <Dropdown value={options.value} options={costs} optionLabel="label" optionValue="value"
-                onChange={(e) => options.editorCallback(e.value)} placeholder="Select a cost"
-                itemTemplate={(option) => {
-                    return <span>{option.label}</span>
-                }} />
-        );
-    }
+
     const authorisedEditor = (options) => {
         return (
             <Dropdown value={options.value} options={authorisedList} optionLabel="label" optionValue="value"
@@ -275,7 +248,15 @@ const RepairAuthTable = () => {
         )
     }
 
-    
+    const costBodyTemplate = (rowData) => {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(rowData.cost);
+    }
+
+    const costEditor = (options) => {
+        return <InputNumber value={options.value} disabled={costEditorDisabled} onValueChange={(e) => {console.log(e.value); options.editorCallback(e.value)}} mode="currency" currency="USD" locale="en-US" />
+    }
+
+    const paginatorRight = <Button type="button" icon="pi pi-cloud" className="p-button-text" />;
 
     return (
         <div className="datatable-editing-demo">
@@ -289,6 +270,7 @@ const RepairAuthTable = () => {
                     columnResizeMode="expand" 
                     responsiveLayout="stack" 
                     selectionAutoFocus={false}
+                    paginatorRight={paginatorRight}
                 >
                     <Column field="description" header="Description" editor={(options) => descriptionEditor(options)}></Column>
                     <Column field="serial" header="Serial" editor={(options => textEditor(options))}></Column>
@@ -300,6 +282,7 @@ const RepairAuthTable = () => {
                     <Column header="Edit" rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                 </DataTable>
                 <Button icon="pi pi-plus" className="mt-0 w-100 p-button-raised p-button-text p-button-sm radius-0" onClick={addRow}/>
+                <p className="text-right mt-3">Total cost: ${totalCost.toFixed(2)}</p>
                 
         </div>
     )
