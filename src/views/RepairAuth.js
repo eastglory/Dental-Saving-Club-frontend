@@ -164,7 +164,7 @@ function RepairAuth() {
                 </div>
                 <div className="pt-2 d-flex flex-row align-items-center">
                   <label className="font-weight-bold text-dark col-sm-2 ">Follow Up On: </label>
-                  <Calendar value={new Date()}></Calendar>
+                  <Calendar value={""}></Calendar>
                   <label className="font-weight-bold text-dark ml-5 mr-3">via:</label>
                   <Dropdown value={selectValue2} onChange={(e)=>setSelectValue2(e.value)} options={[{name: 'email'}, {name: 'phone'}, {name: 'other'}]} optionLabel="name" placeholder="Select" />
                 </div>
