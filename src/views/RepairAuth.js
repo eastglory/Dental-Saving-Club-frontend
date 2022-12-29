@@ -153,7 +153,7 @@ function RepairAuth() {
 
     console.log(body)
 
-    await axios.post('http://localhost:4000/setRepairLog', body)
+    await axios.post('https://dscbackend.onrender.com/setRepairLog', body)
             .then(res => {
                 // localStorage.setItem('tray', JSON.stringify(res.data))
                 // setData(res.data)
