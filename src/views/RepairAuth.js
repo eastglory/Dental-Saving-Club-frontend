@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
 
 // react-bootstrap components
 import {
@@ -23,6 +23,8 @@ import { InputText } from 'primereact/inputtext'
 import RepairAuthTable from "components/Table/RepairAuthTable";
 import JsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
+import axios from 'axios'
+import { Toast } from 'primereact/toast'
 
 
 
@@ -51,32 +53,40 @@ const instructions = [
 
 function RepairAuth() {
 
-  const [selectValue1, setSelectValue1] = useState(null);
-  const [selectValue2, setSelectValue2] = useState(null);
+  const toast = useRef(null);
+
+  const [quoteOn, setQuoteOn] = useState(new Date());
+  const [quoteVia, setQuoteVia] = useState(null)
+  const [followOn, setFollowOn] = useState("")
+  const [followVia, setFollowVia] = useState(null)
   const [status, setStatus] = useState(null);
+  const [asOf, setAsOf] = useState(new Date())
   const [reporter, setReporter] = useState(null);
   const [instruction, setInstruction] = useState(null);
+  const [comment, setComment] = useState(null)
+  const [signature, setSignature] = useState(null)
+  const [signDate, setSignDate] = useState(new Date())
+  const [serviced, setServiced] = useState(null)
+  const [servicedDate, setServicedDate] = useState(new Date())
   const [recId, setRecId] = useState(null)
   const [searchLoading, setSearchLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [client, setClient] = useState(null)
   const [splitRecId, setSplitRecId] = useState("")
+  const [receivedDate, setReceivedDate] = useState("")
+  const [tray, setTray] = useState(null)
+  const [tableData, setTableData] = useState([])
+
+  const formatDate = (date) => {
+    return new Date(date).toISOString().split('T')[0]
+  }
 
   const searchByRecId = () => {
     setSearchLoading(true)
-    setSelectValue1(null);
-    setSelectValue2(null);
-    setStatus(null);
-    setReporter(null);
-    setInstruction(null);
 
-    console.log(recId)
     const clients = JSON.parse(localStorage.getItem("clients"))
-    console.log(clients)
     const tray = JSON.parse(localStorage.getItem("tray"))
-    console.log(tray)
     const result = tray.find(item => item.recId == recId)
-    console.log(result)
     if(result)
       {
         const client = clients.find(client => client.name.toUpperCase() == result.client)
@@ -92,30 +102,90 @@ function RepairAuth() {
         const [mon, day, yeartray] = recId.split('-')
         const year = yeartray.slice(0,4)
         const tray = yeartray.slice(4)
+        setReceivedDate(`${mon}-${day}-${year}`)
+        setTray(tray)
         setSplitRecId(`Received On: ${mon}-${day}-${year}, Tray-${tray}`)
       }
       else {
         setClient(null)
         setSplitRecId("")
       }
+    setServicedDate(new Date())
+    setServiced(null)
+    setSignDate(new Date())
+    setSignature(null)
+    setComment(null)
+    setAsOf(new Date())
+    setFollowVia(null)
+    setFollowOn(null)
+    setQuoteVia(null)
+    setQuoteOn(new Date())
+    setQuoteVia(null);
+    setFollowVia(null);
+    setStatus(null);
+    setReporter(null);
+    setInstruction(null);
     setSearchLoading(false)
   }
 
-  const export2Pdf = async () => {
+
+  const saveAuthData = async () => {
     setSaving(true)
-    const pdf = new JsPDF('portrait', 'pt', 'a4')
-    const data = await html2canvas(document.querySelector('#AuthReport'))
-    const img = data.toDataURL("image/png")
-    const imgProperties = pdf.getImageProperties(img)
-    const pdfWidth = pdf.internal.pageSize.getWidth(img)
-    const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width
-    pdf.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight)
-    pdf.save('RepairAuth.pdf')
+    const body = {
+      tray, 
+      receivedDate: formatDate(receivedDate), 
+      customer: client["Customer Name"],
+      quoteOn: formatDate(quoteOn), 
+      quoteVia, 
+      followOn: formatDate(followOn), 
+      followVia, 
+      status, 
+      asOf: formatDate(asOf), 
+      reporter, 
+      instruction, 
+      comment, 
+      tableData,
+      signature,
+      signDate: formatDate(signDate),
+      serviced,
+      servicedDate: formatDate(servicedDate),
+    }
+
+    console.log(body)
+
+    await axios.post('http://localhost:4000/setRepairLog', body)
+            .then(res => {
+                // localStorage.setItem('tray', JSON.stringify(res.data))
+                // setData(res.data)
+                toast.current.show({severity: 'success', summary: 'Updated Successfully!', detail: `${res}`})
+                // setLoading(false)
+                console.log(res.data)
+            })
+            .catch(err => {
+                toast.current.show({severity: 'error', summary: 'Error!', detail: `${err}`})
+                console.log(err)
+            })
+
+    
+
+    
+    // const pdf = new JsPDF('portrait', 'pt', 'a4')
+    // const data = await html2canvas(document.querySelector('#AuthReport'))
+    // const img = data.toDataURL("image/png")
+    // const imgProperties = pdf.getImageProperties(img)
+    // const pdfWidth = pdf.internal.pageSize.getWidth(img)
+    // const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width
+    // pdf.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight)
+    // pdf.save('RepairAuth.pdf')
+
     setSaving(false)
   }
 
+
+
   return (
     <div >
+      <Toast ref={toast} />
       <Container fluid>
         <Row id="AuthReport">
           <Col md="12">
@@ -158,21 +228,21 @@ function RepairAuth() {
                 } 
                 <div className="pt-5 d-flex flex-row align-items-center">
                   <label className="font-weight-bold text-dark col-sm-2 ">Quote On: </label>
-                  <Calendar value={new Date()}></Calendar>
+                  <Calendar value={quoteOn} onChange={(e) => setQuoteOn(e.value)}></Calendar>
                   <label className="font-weight-bold text-dark ml-5 mr-3">via:</label>
-                  <Dropdown value={selectValue1} onChange={(e)=>setSelectValue1(e.value)} options={[{name: 'email'}, {name: 'phone'}, {name: 'other'}]} optionLabel="name" placeholder="Select" />
+                  <Dropdown value={quoteVia} onChange={(e)=>setQuoteVia(e.value)} options={['email', 'phone', 'other']}  placeholder="Select" />
                 </div>
                 <div className="pt-2 d-flex flex-row align-items-center">
                   <label className="font-weight-bold text-dark col-sm-2 ">Follow Up On: </label>
-                  <Calendar value={""}></Calendar>
+                  <Calendar value={followOn} onChange={(e) => setFollowOn(e.value)}></Calendar>
                   <label className="font-weight-bold text-dark ml-5 mr-3">via:</label>
-                  <Dropdown value={selectValue2} onChange={(e)=>setSelectValue2(e.value)} options={[{name: 'email'}, {name: 'phone'}, {name: 'other'}]} optionLabel="name" placeholder="Select" />
+                  <Dropdown value={followVia} onChange={(e)=>setFollowVia(e.value)} options={['email', 'phone', 'other']} placeholder="Select" />
                 </div>
                 <div className="pt-2 d-flex flex-row align-items-center">
                   <label className="font-weight-bold text-dark col-sm-2 ">Status</label>
                   <Dropdown value={status} onChange={(e)=>setStatus(e.value)} options={statuses} optionLabel="label" placeholder="Select status" />
                   <label className="font-weight-bold text-dark ml-5 mr-3">As of:</label>
-                  <Calendar value={new Date()}></Calendar>
+                  <Calendar value={asOf} onChange={(e) => setAsOf(e.value)}></Calendar>
                   <label className="font-weight-bold text-dark ml-5 mr-3">Reported By:</label>
                   <Dropdown value={reporter} onChange={(e)=>setReporter(e.value)} options={reporters} optionLabel="label" placeholder="Select Reporter" />
                 </div>
@@ -181,7 +251,7 @@ function RepairAuth() {
                   <Dropdown value={instruction} onChange={(e)=>setInstruction(e.value)} options={instructions} optionLabel="label" placeholder="Select" />
                 </div>
                 <div className="mx-3 mt-2">
-                  <InputTextarea className="col-md-12"/>
+                  <InputTextarea value={comment} onChange={(e) => setComment(e.target.value)} className="col-md-12"/>
                 </div>
               </Card.Body>
             </Card>
@@ -192,7 +262,7 @@ function RepairAuth() {
                 <Card.Title as="h4">Repair Authorisation Table</Card.Title>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
-                <RepairAuthTable  />
+                <RepairAuthTable save={setTableData}/>
                 
               </Card.Body>
             </Card>
@@ -201,15 +271,15 @@ function RepairAuth() {
             <Card.Body>
               <div className="pt-2 d-flex flex-row align-items-center">
                 <label className="font-weight-bold text-dark col-sm-2 ">Signature: </label>
-                <Form.Control className="border-bottom w-25"/>
+                <InputText value={signature} onChange={(e) => {setSignature(e.target.value)}}></InputText>
                 <label className="font-weight-bold text-dark ml-5 mr-3">Date:</label>
-                <Calendar value={new Date()}></Calendar>
+                <Calendar value={signDate} onChange={(e) => setSignDate(e.value)}></Calendar>
               </div>
               <div className="pt-2 d-flex flex-row align-items-center">
                 <label className="font-weight-bold text-dark col-sm-2 ">Serviced By: </label>
-                <Form.Control className="border-bottom w-25"/>
+                <InputText value={serviced} onChange={(e) => {setServiced(e.target.value)}}></InputText>
                 <label className="font-weight-bold text-dark ml-5 mr-3">Date:</label>
-                <Calendar value={new Date()}></Calendar>
+                <Calendar value={servicedDate} onChange={(e) => setServicedDate(e.value)}></Calendar>
                 <label className="font-weight-bold text-dark ml-5 mr-3 ">ID: </label>
                 <Form.Control className="border-bottom w-25"/>
               </div>
@@ -218,7 +288,7 @@ function RepairAuth() {
           
         </Row>
         <Col md="12" className="d-flex flex-row justify-content-end">
-            <Button className="mx-3" label="Save" loading={saving} onClick={export2Pdf}/>
+            <Button className="mx-3" label="Save" loading={saving} onClick={saveAuthData}/>
             <Button className="mx-3" label="Email" loading={searchLoading} />
             <Button className="mx-3" label="Print" loading={searchLoading} />
           </Col>

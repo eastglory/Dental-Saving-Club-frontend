@@ -125,7 +125,7 @@ const authorisedList = [
     { label: "", value: null}
 ]
 
-const RepairAuthTable = () => {
+const RepairAuthTable = (props) => {
     const tableData = [
             {
                 description: "",
@@ -180,6 +180,7 @@ const RepairAuthTable = () => {
         _data.forEach((data) => _totalCost += data.cost)
 
         setTotalCost(_totalCost)
+        props.save(_data)
         setData(_data);
     }
 
@@ -244,7 +245,7 @@ const RepairAuthTable = () => {
     }
     const datePickerEditor = (options) => {
         return (
-            <Calendar className="mw-100" value={new Date(options.value || "")} onChange={(e) => {options.editorCallback(e.value.toLocaleDateString().replaceAll('/', '-'))} }/>
+            <Calendar className="mw-100" value={new Date(options.value || "")} onChange={(e) => {options.editorCallback(new Date(e.value).toISOString().split('T')[0])} }/>
         )
     }
 
