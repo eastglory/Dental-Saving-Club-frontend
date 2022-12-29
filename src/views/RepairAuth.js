@@ -132,9 +132,7 @@ function RepairAuth() {
   const saveAuthData = async () => {
     setSaving(true)
     const body = {
-      tray, 
-      receivedDate: formatDate(receivedDate), 
-      customer: client["Customer Name"],
+      recId,
       quoteOn: formatDate(quoteOn), 
       quoteVia, 
       followOn: formatDate(followOn), 

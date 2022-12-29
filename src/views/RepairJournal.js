@@ -1,4 +1,4 @@
-import React, {useState, useRef} from "react";
+import React, {useState, useRef, useEffect} from "react";
 
 // react-bootstrap components
 import {
@@ -22,89 +22,286 @@ import { ProgressBar } from 'primereact/progressbar';
 import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
 import { Tag } from 'primereact/tag';
+import { Autocomplete } from '@material-ui/lab';
 import { Checkbox } from 'primereact/checkbox'
+import axios from 'axios'
 
 const warranties = [
-    { label: "Yes", value: 0 },
-    { label: "No", value: 1},
-    { label: "WillBuyNow", value: 2},
+    "Yes", 
+    "No", 
+    "WillBuyNow"
 ]
 
-const clients = [
-    { label: "M Smile Line dental Clinic", value: 0},
-    { label: "LEDUC GABRIEL DMD INC.", value: 1},
-    { label: "BARTON DENTAL", value: 2},
-    { label: "M Smile Line dental", value: 3},
-    { label: "M Smile Line dental club", value: 4}
+const persons = [
+    "Plinio",
+    "Chadi",
+    "Sara",
+    "Jurg",
+    "Nicole"
 ]
 const waterBlockageList = [
-    { label: "Yes", value: 0},
-    { label: "No", value: 1},
-]
-
-const products = [
-    { label: "MP5", value: 0},
-    { label: "Light Gen", value: 1},
-    { label: "6 PIN", value: 2},
-    { label: "5 PIN", value: 3},
-    { label: "WolfLight", value: 4}
+    "Yes",
+    "No",
 ]
 
 const lubrificationList = [
-    { label: "Adequate", value: 0 },
-    { label: "Under lubricated", value: 1},
-    { label: "Over lubricated", value: 2},
-    { label: "None", value: 3},
+    "Adequate", 
+    "Under lubricated",
+    "Over lubricated",
+    "None",
 ]
 
 const chucks = [
-    { label: "GOOD RETENTION", value: 0},
-    { label: "DOES NOT HOLD", value: 1},
-    { label: "DOES NOT RELEASE", value: 2},
+    "GOOD RETENTION", 
+    "DOES NOT HOLD", 
+    "DOES NOT RELEASE", 
 ]
 
 const bearings = [
-    { label: "GOOD", value: 0},
-    { label: "WORN", value: 1},
-    { label: "CORRODED", value: 2},
+    "GOOD",
+    "WORN",
+    "CORRODED",
 ]
 
 const feasabilities = [
-    { label: "REPAIRED", value: 0},
-    { label: "NEW MIDSHAFT GEAR OR/AND NEW HEAD", value: 1},
-    { label: "REPLACE HOUSING", value: 2},
-    { label: "RETURNED AS IS", value: 3},
-    { label: "DISPOSED", value: 4},
+    "REPAIRED", 
+    "NEW MIDSHAFT GEAR OR/AND NEW HEAD", 
+    "REPLACE HOUSING", 
+    "RETURNED AS IS", 
+    "DISPOSED", 
 ]
 
 const classMulfunctionedList = [
-    { label: "BATTERY", value: 0},
-    { label: "BEARING", value: 1},
-    { label: "CHUCK", value: 2},
-    { label: "CHUCK BLOCKED", value: 3},
-    { label: "GEAR", value: 4},
-    { label: "HOUSING", value: 5},
+    "BATTERY",
+    "BEARING",
+    "CHUCK",
+    "CHUCK BLOCKED",
+    "GEAR",
+    "HOUSING",
+]
+
+const products = [ 
+    { label: 'EZSENSOR 1.0',
+        description: 'HDI-S DIGITAL X RAY SENSOR #1.0' },
+    { label: 'EZSENSOR 1.5',
+        description: 'HDI-S DIGITAL X RAY SENSOR #1.5' },
+    { label: 'EZSENSOR 2.0',
+        description: 'HDI-S DIGITAL X RAY SENSOR #2.0' },
+    { label: 'WBL-45', description: 'WOLF SURGICAL 45 DEG' },
+    { label: 'WBL-KV-MED',
+        description: 'WOlf Black Label High Speed Standard Head' },
+    { label: 'WBL-KV-SMA',
+        description: 'WOlf Black Label  Mini Head  Without coupler' },
+    { label: 'WBL-NSK-MED',
+        description: 'WOlf Black Label NSK Standard' },
+    { label: 'WBL-NSK-SMAL',
+        description: 'WOlf Black Label NSK Small' },
+    { label: 'WNIN-KV-MEDL',
+        description: 'WOLF NINJA KAVO STANDARD HEAD' },
+    { label: 'WNIN-KV-SMAL',
+        description: 'WOLF NINJA KAVO MINI  HEAD' },
+    { label: 'WOLF1:1CA', description: 'WOLF 1:1 CONTRA ANGLE' },
+    { label: 'WOLF16:1CA', description: 'WOLF 16:1 CONTRA ANGLE' },
+    { label: 'WOLF16:1-H-ROT',
+        description: 'WOLF 16:1 ROTATION HEAD' },
+    { label: 'WOLF25', description: 'WOlf 25 K Air Motor' },
+    { label: 'WOLF25KLED', description: 'WOLF 25K LED AIR MOTOR' },
+    { label: 'WOLF4:1CA', description: 'WOLF 4:1 CONTRA ANGLE' },
+    { label: 'WOLF-CFX', description: 'WOLF CURE FX CURING LIGHT' },
+    { label: 'WOLFE',
+        description: 'WOlf Electric Micromotor with Tablet' },
+    { label: 'WOLFEIN', description: 'WOlf Internal Micro Motor' },
+    { label: 'WOLF-HYG',
+        description: 'WOLF HYGIENE HANDPIECE SLOW SPEED' },
+    { label: 'WOLF-LUBRICATOR-2HS',
+        description: 'WOLF Lubricator - Lubrication machine- 2 High Speed' },
+    { label: 'WOLF-LUBRICATOR-2SS',
+        description: 'Wolf Lubricator machine - 2 Slow Spped adaptors' },
+    { label: 'WOLF-LUBRICATOR-OIL',
+        description: 'WOlf Oil 1 liter' },
+    { label: 'WOLFPBH',
+        description: 'WOLF PUSH BUTTON BALL BEARING HEAD' },
+    { label: 'WOLFREDX',
+        description: 'WOLF RED X  1:5 HIGH SPEED ELECTRIC' },
+    { label: 'WOLF-SCALATRON',
+        description: 'WOLF SCALATRON Magnetostrictive Ultrasonic Scaler' },
+    { label: 'WOLFSIH', description: 'WOLF SCREW IN PROPHY HEAD' },
+    { label: 'WOLFSLH', description: 'WOLF STANDARD LATCH HEAD' },
+    { label: 'WOLFSNAPON', description: 'WOlf SNAP ON HEAD' },
+    { label: 'WPL-KV-MEDL',
+        description: 'WOlf Platinum Label  Standard KAVO with Light' },
+    { label: 'WPL-KV-SMAL',
+        description: 'WOlf Platinum Label Mini KAVO with Light' },
+    { label: 'WPL-NSK-MEDL',
+        description: 'WOlf Platinum Label  Standard NSK with Light' },
+    { label: 'WPL-NSK-SMAL',
+        description: 'WOLF Platinum Label  small NSK with light' },
+    { label: 'WR-B-FG', description: 'Wolf Blue Ring 1:1 FG' },
+    { label: 'WR-B-FG-H', description: 'Wolf Blue Ring FG PBHead' },
+    { label: 'WR-B-FG-LED',
+        description: 'Wolf Blue Ring 1:1 FG LED' },
+    { label: 'WR-B-RA', description: 'Wolf Blue Ring 1:1 RA' },
+    { label: 'WR-B-RA-H', description: 'Wolf Blue Ring Ra Head' },
+    { label: 'WR-B-RA-H1',
+        description: 'Wolf Blue Ring RA PB Head' },
+    { label: 'WR-B-RA-LED',
+        description: 'WOLF Blue Ring RA LED 1:1' },
+    { label: 'WR-G-FG', description: 'WOLF GREENRING4.1 FG HP' },
+    { label: 'WR-G-RA', description: 'WOlf Green Ring 4:1 Ratio' },
+    { label: 'WR-G-RA-LED', description: 'WOlf Green Ring 4:1 LED' },
+    { label: 'WR-GREY', description: 'Wolf Grey Ring Straight HP.' },
+    { label: 'WR-G-SI-H',
+        description: 'WOLF GREEN RING SCREW HEAD' },
+    { label: 'WSL-5H-MED',
+        description: 'WOlf Silver Label 5 Hole No Light' },
+    { label: 'WSL-5H-MEDL',
+        description: 'WOlf Silver Label 5 Hole with Light' },
+    { label: 'WSL-5H-SMA',
+        description: 'WOlf Silver Label 5 Hole Small No Light' },
+    { label: 'WSL-5H-SMAL',
+        description: 'WOlf Silver Label 5 Hole Small with Light' },
+    { label: 'WSL-KV-MED',
+        description: 'WOlf Silver Label Standard KAVO No Light' },
+    { label: 'WSL-KV-MEDL',
+        description: 'WOlf Silver Label Standard KAVO with Light' },
+    { label: 'WSL-KV-SMA',
+        description: 'WOlf Silver Label Mini head KAVO No Light' },
+    { label: 'WSL-KV-SMAL',
+        description: 'WOlf Silver Label Mini Head KAVO with Light' },
+    { label: 'WSL-MED-TUR',
+        description: 'WOLF SILVER LABEL STANDARD TURBINE' },
+    { label: 'WSL-NSK-MED',
+        description: 'WOlf Silver Label Standard NSK No Light' },
+    { label: 'WSL-NSK-MEDL',
+        description: 'WOlf Silver Label Standard NSK with Light' },
+    { label: 'WSL-NSK-SMA',
+        description: 'WOlf Silver Label Mini NSK NO LIGHT' },
+    { label: 'WSL-NSK-SMAL',
+        description: 'WOlf Silver Label Mini NSK with Light' } 
 ]
 
 function RepairJournal() {
 
-    const [client, setClient] = useState(clients[0]);
-    const [product, setProduct] = useState(products[0]);
+    const [client, setClient] = useState("");
+    const [clients, setClients] = useState([])
+    const [person, setPerson] = useState(null)
+    const [product, setProduct] = useState("");
     const [warranty, setWarranty] = useState(warranties[0]);
     const [chuck, setChuck] = useState(chucks[0]);
     const [bearing, setBearing] = useState(bearings[0]);
     const [waterBlockage, setWaterBlockage] = useState(waterBlockageList[0]);
     const [lubrification, setLubrification] = useState(lubrificationList[0]);
     const [feasability, setFeasability] = useState(feasabilities[0]);
-    const [calssMulfunctioned, setCalssMulfunctioned] = useState(classMulfunctionedList[0]);
     const [totalSize, setTotalSize] = useState(0);
-    const [unproperLubrificationChecked, setUnproperLubrificationChecked] = useState(false);
-    const [physicalDamageChecked, setPhysicalDamageChecked] = useState(false);
-    const [deviceFailur,setDeviceFailur] = useState(false);
-    const [seriousMedicalFailur, setSeriousMedicalFailur] = useState(false);
-    const [userFailur, setUserFailur] = useState(false);
+    const [check1, setCheck1] = useState(false);
+    const [check2, setCheck2] = useState(false);
+    const [check3,setCheck3] = useState(false);
+    const [check4, setCheck4] = useState(false);
+    const [check5, setCheck5] = useState(false);
+    const [invoice, setInvoice] = useState(null)
+    const [serial, setSerial] = useState(null)
+    const [subject, setSubject] = useState(null)
+    const [failurDescription, setFailurDescription] = useState(null)
+    const [malfunctioned, setMalfunctioned] = useState(null)
+    const [defectAnalysis, setDefectAnalysis] = useState(null)
+    const [comment, setComment] = useState(null)
+    const [datRec, setDatRec] = useState('')
+    const [datHan, setDatHan] = useState("")
+    const [datRep, setDatRep] = useState("")
+    const [serials, setSerials] = useState([])
+    const [recId, setRecId] = useState(null)
+    const [adding, setAdding] = useState(false)
+    const [searchLoading, setSearchLoading] = useState(false)
 
     const toast = useRef(null);
+    
+    const formatDate = (date) => {
+            return new Date(date).toISOString().split('T')[0]
+    }
+    const addData = async () => {
+        setAdding(true)
+        const body = {
+            datRec: formatDate(datRec),
+            datHan: formatDate(datHan),
+            datRep: formatDate(datRep),
+            person,
+            client,
+            invoice,
+            serial,
+            product,
+            warranty,
+            subject,
+            failurDescription,
+            malfunctioned,
+            defectAnalysis,
+            comment,
+            check1,
+            check2,
+            check3,
+            check4,
+            check5,
+            bearing,
+            chuck,
+            waterBlockage,
+            lubrification,
+            feasability
+        }
+
+
+        await axios.post('https://dscbackend.onrender.com/setRepairJournal', body)
+            .then(res => {
+                // localStorage.setItem('tray', JSON.stringify(res.data))
+                // setData(res.data)
+                toast.current.show({severity: 'success', summary: 'Updated Successfully!', detail: `${res}`})
+                // setLoading(false)
+                console.log(res.data)
+            })
+            .catch(err => {
+                toast.current.show({severity: 'error', summary: 'Error!', detail: `${err}`})
+                console.log(err)
+            })
+        setAdding(false)
+    }
+
+    const searchByRecId = async () => {
+        setSearchLoading(true)
+    
+        const tray = JSON.parse(localStorage.getItem("tray"))
+        const result = tray.find(item => item.recId == recId)
+        if(result)
+          {
+            setClient(result.client)
+            const [mon, day, yeartray] = recId.split('-')
+            const year = yeartray.slice(0,4)
+            const tray = yeartray.slice(4)
+            setDatRec(new Date(`${mon}-${day}-${year}`))
+            await axios.get(`https://dscbackend.onrender.com/getserialsfromrecid?recId=${recId}`)
+                .then(res => {
+                    let arr = []
+                    res.data.forEach(item => arr.push(item.serial))
+                    setSerials(arr)
+                })
+                .catch(err => console.log(err) )
+          }
+          else {
+            setClient(null)
+            setSplitRecId("")
+          }
+        setSearchLoading(false)
+    }
+
+    useEffect(() => {
+        const clientsData = JSON.parse(localStorage.getItem('clients'))
+        let arr = [];
+        if(clientsData) {
+            clientsData.forEach(client => {
+                arr.push(client.name)
+            })
+            setClients(arr)
+        }
+        
+    }, [])
+
     const fileUploadRef = useRef(null);
 
     const onTemplateSelect = (e) => {
@@ -183,51 +380,53 @@ function RepairJournal() {
     return (
     <>
       <Container fluid>
+        <Toast ref={toast} />
         <Row>
             <Card>
-              <Card.Header>
-                <Card.Title as="h4">Repair Journal</Card.Title>
+              <Card.Header className="d-flex flex-column justify-content-center">
+                <Card.Title className="text-center" as="h4">Repair Journal</Card.Title>
+                <div className="d-flex flex-row mx-auto mt-3 ">
+                  <InputText
+                    className="text-center" 
+                    value={recId} 
+                    placeholder="Type Rec Id..." 
+                    onChange={(e) => {setRecId(e.target.value)}}
+                  ></InputText>
+                  <Button label="Search" loading={searchLoading} onClick={searchByRecId}/>
+                </div>
               </Card.Header>
               <Card.Body>
                 <Form>
                     <Row>
                     <Col md="7">
                         <Row>
-                            <Col className="px-3" md="2">
-                            <Form.Group>
-                                <label className="font-weight-bold w-100 text-dark rounded">ID</label>
-                                <InputText className="mw-100" />
-                            </Form.Group>
-                            </Col>
-                            <Col className="pr-3" md="2">
+                            <Col className="px-3" md="3">
                             <Form.Group>
                                 <label className="font-weight-bold w-100 text-dark rounded">Received Date</label>
-                                <Calendar value={new Date()}/>
+                                <Calendar value={datRec} onChange={e => setDatRec(e.value)}/>
                             </Form.Group>
                             </Col>
-                            <Col className="pr-3" md="2">
+                            <Col className="pr-3" md="3">
                             <Form.Group>
                                 <label className="font-weight-bold w-100 text-dark rounded">Handling Date</label>
-                                <Calendar value={new Date()}/>
+                                <Calendar value={datHan} onChange={e => setDatHan(e.value)}/>
                             </Form.Group>
                             </Col>
-                            <Col className="pr-3" md="2">
+                            <Col className="pr-3" md="3">
                             <Form.Group>
                                 <label className="font-weight-bold w-100 text-dark rounded">Report Date</label>
-                                <Calendar value={new Date()}/>
+                                <Calendar value={datRep} onChange={e => setDatRep(e.value)}/>
                             </Form.Group>
                             </Col>
-                            <Col className="pr-3" md="4">
+                            <Col className="pr-3" md="3">
                             <Form.Group>
                                 <label className="font-weight-bold w-100 text-dark rounded">Person</label>
                                 <Dropdown 
-                                    value={client}
-                                    options={clients} 
-                                    optionLabel="label" 
-                                    optionValue="value" 
+                                    value={person}
+                                    options={persons} 
                                     placeholder="select"
                                     className="w-100"
-                                    onChange={(e) => setClient(e.value)}    
+                                    onChange={(e) => setPerson(e.value)}    
                                 />
                             </Form.Group>
                             </Col>
@@ -237,34 +436,52 @@ function RepairJournal() {
                                 <label className="font-weight-bold w-100 text-dark rounded">Customer</label>
                             </Col>
                             <Col  md="10">
-                            <InputText className="w-100" />
+                            <Autocomplete freeSolo autoComplete autoHighlight 
+                                options={clients} 
+                                inputValue={client}
+                                onChange={(e, value) => setClient(value.toUpperCase())}
+                                renderInput={(params => ( 
+                                    <div ref={params.InputProps.ref}>
+                                        <input type="text" {...params.inputProps} 
+                                        className="w-100 p-inputtext p-component p-filled p-inputnumber-input"
+                                        onChange={(e) => setClient(e.target.value)}/>
+                                    </div>
+                  ))} />
                             </Col>
                         </Row>
                         <Row>
                             <Col className="px-3" md="2">
                             <Form.Group>
                                 <label className="font-weight-bold w-100 text-dark rounded">Invoice</label>
-                                <InputText className="w-100" />
+                                <InputText className="w-100" value={invoice} onChange={e => setInvoice(e.target.value)}/>
                             </Form.Group>
                             </Col>
                             <Col className="pr-3" md="4">
                             <Form.Group>
                                 <label className="font-weight-bold w-100 text-dark rounded">Serial</label>
-                                <InputText className="w-100" />
+                                <Dropdown 
+                                    value={serial}
+                                    options={serials} 
+                                    placeholder="select"
+                                    className="w-100"
+                                    onChange={(e) => setSerial(e.value)}    
+                                />
                             </Form.Group>
                             </Col>
                             <Col className="pr-3" md="4">
                             <Form.Group>
                                 <label className="font-weight-bold w-100 text-dark rounded">Product</label>
-                                <Dropdown 
-                                    value={product}
-                                    options={products} 
-                                    optionLabel="label" 
-                                    optionValue="value" 
-                                    placeholder="select"
-                                    className="w-100"
-                                    onChange={(e) => setProduct(e.value)}    
-                                />
+                                <Autocomplete freeSolo autoComplete autoHighlight 
+                                    options={products.map(product => {return product.label})} 
+                                    inputValue={product}
+                                    onChange={(e, value) => setProduct(value)}
+                                    renderInput={(params => ( 
+                                        <div ref={params.InputProps.ref}>
+                                            <input type="text" {...params.inputProps} 
+                                            className="p-inputtext p-component p-filled p-inputnumber-input"
+                                            onChange={(e) => setProduct(e.target.value)}/>
+                                        </div>
+                                    ))} />
                             </Form.Group>
                             </Col>
                             <Col className="pr-3" md="2">
@@ -273,8 +490,6 @@ function RepairJournal() {
                                 <Dropdown 
                                     value={warranty}
                                     options={warranties} 
-                                    optionLabel="label" 
-                                    optionValue="value" 
                                     placeholder="select"
                                     className="w-100"
                                     onChange={(e) => setWarranty(e.value)}    
@@ -287,7 +502,7 @@ function RepairJournal() {
                                 <label className="font-weight-bold w-100 text-dark rounded">Subject</label>
                             </Col>
                             <Col  md="10">
-                            <InputText className="w-100" />
+                            <InputText className="w-100" value={subject} onChange={e => setSubject(e.target.value)}/>
                             </Col>
                         </Row>
                         <Row className="align-items-center">
@@ -295,7 +510,7 @@ function RepairJournal() {
                                 <label className="font-weight-bold w-100 text-dark rounded">Customer Failur Description</label>
                             </Col>
                             <Col  md="10">
-                                <InputTextarea className="w-100" rows={2}/>
+                                <InputTextarea className="w-100" rows={2} value={failurDescription} onChange={e => setFailurDescription(e.target.value)}/>
                             </Col>
                         </Row>
                         <Row className="align-items-center">
@@ -304,13 +519,11 @@ function RepairJournal() {
                             </Col>
                             <Col  md="10">
                             <Dropdown 
-                                    value={calssMulfunctioned}
+                                    value={malfunctioned}
                                     options={classMulfunctionedList} 
-                                    optionLabel="label" 
-                                    optionValue="value" 
                                     placeholder="select"
                                     className="w-100"
-                                    onChange={(e) => setCalssMulfunctioned(e.value)}    
+                                    onChange={(e) => setMalfunctioned(e.value)}    
                                 />
                             </Col>
                         </Row>
@@ -319,7 +532,7 @@ function RepairJournal() {
                                 <label className="font-weight-bold w-100 text-dark rounded">Defect Analysis</label>
                             </Col>
                             <Col  md="10">
-                                <InputTextarea className="w-100" rows={2}/>
+                                <InputTextarea className="w-100" rows={2} value={defectAnalysis} onChange={e => setDefectAnalysis(e.target.value)}/>
                             </Col>
                         </Row>
                         <Row className="align-items-center">
@@ -327,7 +540,7 @@ function RepairJournal() {
                                 <label className="font-weight-bold w-100 text-dark rounded">Comment</label>
                             </Col>
                             <Col  md="10">
-                                <InputTextarea className="w-100" rows={2}/>
+                                <InputTextarea className="w-100" rows={2} value={comment} onChange={e => setComment(e.target.value)}/>
                             </Col>
                         </Row>
                         <Row className="align-items-center">
@@ -338,8 +551,8 @@ function RepairJournal() {
                                 <Row>
                                     <Col md="5" className="align-items-center" >
                                         <Checkbox 
-                                            checked={unproperLubrificationChecked} 
-                                            onChange={(e) => setUnproperLubrificationChecked(e.checked)}
+                                            checked={check1} 
+                                            onChange={(e) => setCheck1(e.checked)}
                                             inputId="binary" 
                                             className="mr-2"/>
                                         <label className="font-weight-bold text-dark rounded">
@@ -348,8 +561,8 @@ function RepairJournal() {
                                     </Col>
                                     <Col md="4" className="align-items-center" >
                                         <Checkbox 
-                                            checked={physicalDamageChecked} 
-                                            onChange={(e) => setPhysicalDamageChecked(e.checked)}
+                                            checked={check2} 
+                                            onChange={(e) => setCheck2(e.checked)}
                                             inputId="binary" 
                                             className="mr-2"/>
                                         <label className="font-weight-bold text-dark rounded">
@@ -358,8 +571,8 @@ function RepairJournal() {
                                     </Col>
                                     <Col md="3" className="align-items-center" >
                                         <Checkbox 
-                                            checked={deviceFailur} 
-                                            onChange={(e) => setDeviceFailur(e.checked)}
+                                            checked={check3} 
+                                            onChange={(e) => setCheck3(e.checked)}
                                             inputId="binary" 
                                             className="mr-2"/>
                                         <label className="font-weight-bold text-dark rounded">
@@ -370,8 +583,8 @@ function RepairJournal() {
                                 <Row>  
                                     <Col md="5" className="align-items-center" >
                                         <Checkbox 
-                                            checked={seriousMedicalFailur} 
-                                            onChange={(e) => setSeriousMedicalFailur(e.checked)}
+                                            checked={check4} 
+                                            onChange={(e) => setCheck4(e.checked)}
                                             inputId="binary" 
                                             className="mr-2"/>
                                         <label className="font-weight-bold text-dark rounded">
@@ -380,8 +593,8 @@ function RepairJournal() {
                                     </Col>
                                     <Col md="4" className="align-items-center" >
                                         <Checkbox 
-                                            checked={userFailur} 
-                                            onChange={(e) => setUserFailur(e.checked)}
+                                            checked={check5} 
+                                            onChange={(e) => setCheck5(e.checked)}
                                             inputId="binary" 
                                             className="mr-2"/>
                                         <label className="font-weight-bold text-dark rounded">
@@ -418,8 +631,6 @@ function RepairJournal() {
                                 <Dropdown 
                                     value={bearing}
                                     options={bearings} 
-                                    optionLabel="label" 
-                                    optionValue="value" 
                                     placeholder="select"
                                     className="w-100"
                                     onChange={(e) => setBearing(e.value)}    
@@ -428,12 +639,10 @@ function RepairJournal() {
                             </Col>
                             <Col className="pr-3" md="4">
                             <Form.Group>
-                                <label className="font-weight-bold w-100 text-dark rounded">Product</label>
+                                <label className="font-weight-bold w-100 text-dark rounded">Chucks</label>
                                 <Dropdown 
                                     value={chuck}
                                     options={chucks} 
-                                    optionLabel="label" 
-                                    optionValue="value" 
                                     placeholder="select"
                                     className="w-100"
                                     onChange={(e) => setChuck(e.value)}    
@@ -446,8 +655,6 @@ function RepairJournal() {
                                 <Dropdown 
                                     value={waterBlockage}
                                     options={waterBlockageList} 
-                                    optionLabel="label" 
-                                    optionValue="value" 
                                     placeholder="select"
                                     className="w-100"
                                     onChange={(e) => setWaterBlockage(e.value)}    
@@ -462,8 +669,6 @@ function RepairJournal() {
                                 <Dropdown 
                                     value={lubrification}
                                     options={lubrificationList} 
-                                    optionLabel="label" 
-                                    optionValue="value" 
                                     placeholder="select"
                                     className="w-100"
                                     onChange={(e) => setLubrification(e.value)}    
@@ -472,12 +677,10 @@ function RepairJournal() {
                             </Col>
                             <Col className="pr-3" md="6">
                             <Form.Group>
-                                <label className="font-weight-bold w-100 text-dark rounded">Warranty</label>
+                                <label className="font-weight-bold w-100 text-dark rounded">Feasability</label>
                                 <Dropdown 
                                     value={feasability}
                                     options={feasabilities} 
-                                    optionLabel="label" 
-                                    optionValue="value" 
                                     placeholder="select"
                                     className="w-100"
                                     onChange={(e) => setFeasability(e.value)}    
@@ -485,16 +688,10 @@ function RepairJournal() {
                             </Form.Group>
                             </Col>
                         </Row>
-                        
-                        <Button
-                            className="btn-fill pull-right float-right"
-                            variant="info"
-                        >
-                            ADD
-                        </Button>
                     </Col>
                     </Row>
                   </Form>
+                  <Button className="btn-fill float-right" variant="info" onClick={addData} loading={adding} >ADD</Button>
               </Card.Body>
             </Card>
         </Row>
