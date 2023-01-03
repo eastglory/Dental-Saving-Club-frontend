@@ -10,17 +10,14 @@ import { Badge } from 'react-bootstrap';
 
 const CustomerServiceTable = (props) => {
     const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(false)
     const toast = useRef(null);
 
-    useEffect(() => {
-        console.log(props.data.data)
-        setData(props.data.data);
-    }, [])
 
     return (
         <div className="datatable-editing-demo">
             <Toast ref={toast} />
-                <DataTable value={data} resizableColumns columnResizeMode="expand" responsiveLayout="stack">
+                <DataTable loading={props.loading} value={props.data} resizableColumns columnResizeMode="expand" responsiveLayout="stack">
                     <Column field="id" header="ID" ></Column>
                     <Column field="recievedOn" header="Recieved On"></Column>
                     <Column field="handledOn" header="Handled On"></Column>

@@ -152,18 +152,17 @@ const RepairTrackerTable = (props) => {
     return (
         <div className="datatable-editing-demo">
             <Toast ref={toast} />
-                <DataTable value={data} filterDisplay="row" editMode="row" dataKey="id" onRowEditComplete={onRowEditComplete} resizableColumns columnResizeMode="expand" responsiveLayout="stack">
+                <DataTable value={data} filterDisplay="row" editMode="row" dataKey="id" resizableColumns columnResizeMode="expand" responsiveLayout="stack">
                     <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="customerName" header="Customer Name"></Column>
-                    <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="product" header="Product" body={productBodyTemplate} editor={(options) => productEditor(options)}></Column>
+                    <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="product" header="Product" body={productBodyTemplate} ></Column>
                     <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="serial" header="Serial Number"></Column>
                     <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="dop" header="Original D.O.P"  ></Column>
                     <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="received" header="Received on" ></Column>
-                    <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="waterBlockage" header="Water Blockage" body={waterBlockageBodyTemplate} editor={(options) => waterBlockageEditor(options)} ></Column>
-                    <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="lubrification" header="Lubrification" body={lubrificationBodyTemplate} editor={(options) => lubrificationEditor(options)} ></Column>
-                    <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="repairFeasabilbity" header="Repair Feasability" body={repairFeasabilityBodyTemplate} editor={(options) => repairFeasabilityEditor(options)} ></Column>
-                    <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="replacement" header="Replacement SN" body={replacementBodyTemplate} editor={(options) => replacementEditor(options)} ></Column>
+                    <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="waterBlockage" header="Water Blockage" body={waterBlockageBodyTemplate}></Column>
+                    <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="lubrification" header="Lubrification" body={lubrificationBodyTemplate} ></Column>
+                    <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="repairFeasabilbity" header="Repair Feasability" body={repairFeasabilityBodyTemplate} ></Column>
+                    <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="replacement" header="Replacement SN" body={replacementBodyTemplate}  ></Column>
                     <Column field="toWarranty" header="To Warranty" body={toWarrantyBodyTemplate}></Column>
-                    <Column header="Edit" rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                 </DataTable>
         </div>
     )

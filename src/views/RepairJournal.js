@@ -192,7 +192,6 @@ function RepairJournal() {
     const [waterBlockage, setWaterBlockage] = useState(waterBlockageList[0]);
     const [lubrification, setLubrification] = useState(lubrificationList[0]);
     const [feasability, setFeasability] = useState(feasabilities[0]);
-    const [totalSize, setTotalSize] = useState(0);
     const [check1, setCheck1] = useState(false);
     const [check2, setCheck2] = useState(false);
     const [check3,setCheck3] = useState(false);
@@ -212,55 +211,96 @@ function RepairJournal() {
     const [recId, setRecId] = useState(null)
     const [adding, setAdding] = useState(false)
     const [searchLoading, setSearchLoading] = useState(false)
+    const [files, setFiles] = useState([])
+    const [urls, setUrls] = useState([])
 
+    const fileUploadRef = useRef(null);
     const toast = useRef(null);
+
+    useEffect(() => {
+        const clientsData = JSON.parse(localStorage.getItem('clients'))
+        let arr = [];
+        if(clientsData) {
+            clientsData.forEach(client => {
+                arr.push(client.name)
+            })
+            setClients(arr)
+        }
+        
+    }, [])
     
     const formatDate = (date) => {
             return new Date(date).toISOString().split('T')[0]
     }
+
     const addData = async () => {
         setAdding(true)
-        const body = {
-            datRec: formatDate(datRec),
-            datHan: formatDate(datHan),
-            datRep: formatDate(datRep),
-            person,
-            client,
-            invoice,
-            serial,
-            product,
-            warranty,
-            subject,
-            failurDescription,
-            malfunctioned,
-            defectAnalysis,
-            comment,
-            check1,
-            check2,
-            check3,
-            check4,
-            check5,
-            bearing,
-            chuck,
-            waterBlockage,
-            lubrification,
-            feasability
-        }
+
+        const uploaders = files.map(file => {
+            const formData = new FormData();
+            const cloudinaryUrl = "https://api.cloudinary.com/v1_1/dxyshl8cm/image/upload";
+            formData.append("file", file);
+            formData.append("upload_preset", process.env.REACT_APP_CLOUD_PRESET_NAME)
+            formData.append('cloud_name', process.env.REACT_APP_CLOUD_NAME)
+            console.log(process.env.REACT_APP_CLOUD_NAME)
+
+            return axios.post(cloudinaryUrl, formData).then(res => {
+                const data = res.data
+                const url = data.secure_url
+                let _urls = urls;
+                _urls.push(url)
+                setUrls(_urls)
+            })
+        })
+
+        axios.all(uploaders).then(() => {
+            const formData = new FormData()
+            const body = {
+                datRec: formatDate(datRec),
+                datHan: formatDate(datHan),
+                datRep: formatDate(datRep),
+                person,
+                client,
+                invoice,
+                serial,
+                product,
+                warranty,
+                subject,
+                failurDescription,
+                malfunctioned,
+                defectAnalysis,
+                comment,
+                check1,
+                check2,
+                check3,
+                check4,
+                check5,
+                bearing,
+                chuck,
+                waterBlockage,
+                lubrification,
+                feasability,
+                images: JSON.stringify(urls)
+            }
 
 
-        await axios.post('https://dscbackend.onrender.com/setRepairJournal', body)
-            .then(res => {
-                // localStorage.setItem('tray', JSON.stringify(res.data))
-                // setData(res.data)
-                toast.current.show({severity: 'success', summary: 'Updated Successfully!', detail: `${res}`})
-                // setLoading(false)
-                console.log(res.data)
-            })
-            .catch(err => {
-                toast.current.show({severity: 'error', summary: 'Error!', detail: `${err}`})
-                console.log(err)
-            })
-        setAdding(false)
+            axios.post('http://localhost:4000/setRepairJournal', body)
+                .then(res => {
+                    // localStorage.setItem('tray', JSON.stringify(res.data))
+                    // setData(res.data)
+                    toast.current.show({severity: 'success', summary: 'Updated Successfully!', detail: `${res}`})
+                    // setLoading(false)
+                    console.log(res.data)
+                    setAdding(false)
+
+                })
+                .catch(err => {
+                    toast.current.show({severity: 'error', summary: 'Error!', detail: `${err}`})
+                    setAdding(false)
+                    console.log(err)
+                })
+        })
+        
     }
 
     const searchByRecId = async () => {
@@ -290,59 +330,36 @@ function RepairJournal() {
         setSearchLoading(false)
     }
 
-    useEffect(() => {
-        const clientsData = JSON.parse(localStorage.getItem('clients'))
-        let arr = [];
-        if(clientsData) {
-            clientsData.forEach(client => {
-                arr.push(client.name)
-            })
-            setClients(arr)
-        }
-        
-    }, [])
-
-    const fileUploadRef = useRef(null);
-
     const onTemplateSelect = (e) => {
-        let _totalSize = totalSize;
-        e.files.forEach(file => {
-            _totalSize += file.size;
+        let _files = files;
+        const selectedFiles = Object.values(e.files)
+        selectedFiles.forEach(file => {
+            _files.push(file)
         });
 
-        setTotalSize(_totalSize);
-    }
+        console.log(_files)
 
-    const onTemplateUpload = (e) => {
-        let _totalSize = 0;
-        e.files.forEach(file => {
-            _totalSize += (file.size || 0);
-        });
 
-        setTotalSize(_totalSize);
-        toast.current.show({severity: 'info', summary: 'Success', detail: 'File Uploaded'});
+        setFiles(_files);
     }
 
     const onTemplateRemove = (file, callback) => {
-        setTotalSize(totalSize - file.size);
+        const _files = files
+        _files.splice(files.indexOf(file), 1)
+        setFiles(_files)
         callback();
     }
 
     const onTemplateClear = () => {
-        setTotalSize(0);
+        setFiles([])
     }
 
     const headerTemplate = (options) => {
-        const { className, chooseButton, uploadButton, cancelButton } = options;
-        const value = totalSize/10000;
-        const formatedValue = fileUploadRef && fileUploadRef.current ? fileUploadRef.current.formatSize(totalSize) : '0 B';
-        // console.log(className);
+        const { className, chooseButton, cancelButton } = options;
         return (
             <div className={className} style={{backgroundColor: 'transparent', display: 'flex', alignItems: 'center'}}>
                 {chooseButton}
-                {uploadButton}
                 {cancelButton}
-                <ProgressBar value={value} displayValueTemplate={() => `${formatedValue} / 1 MB`} style={{width: '300px', height: '20px', marginLeft: 'auto'}}></ProgressBar>
             </div>
         );
     }
@@ -373,7 +390,6 @@ function RepairJournal() {
     }
 
     const chooseOptions = {icon: 'pi pi-fw pi-images', iconOnly: true, className: 'custom-choose-btn p-button-rounded p-button-outlined'};
-    const uploadOptions = {icon: 'pi pi-fw pi-cloud-upload', iconOnly: true, className: 'custom-upload-btn p-button-success p-button-rounded p-button-outlined'};
     const cancelOptions = {icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined'};
 
 
@@ -446,7 +462,7 @@ function RepairJournal() {
                                         className="w-100 p-inputtext p-component p-filled p-inputnumber-input"
                                         onChange={(e) => setClient(e.target.value)}/>
                                     </div>
-                  ))} />
+                            ))} />
                             </Col>
                         </Row>
                         <Row>
@@ -613,7 +629,6 @@ function RepairJournal() {
                             multiple 
                             accept="image/*" 
                             maxFileSize={1000000}
-                            onUpload={onTemplateUpload} 
                             onSelect={onTemplateSelect} 
                             onError={onTemplateClear} 
                             onClear={onTemplateClear}
@@ -621,7 +636,6 @@ function RepairJournal() {
                             itemTemplate={itemTemplate} 
                             emptyTemplate={emptyTemplate}
                             chooseOptions={chooseOptions} 
-                            uploadOptions={uploadOptions} 
                             cancelOptions={cancelOptions} />
                             
                         <Row className="pt-4 mt-5">
@@ -691,7 +705,8 @@ function RepairJournal() {
                     </Col>
                     </Row>
                   </Form>
-                  <Button className="btn-fill float-right" variant="info" onClick={addData} loading={adding} >ADD</Button>
+                  <Button className="mx-3 btn-fill float-right" variant="info" onClick={addData} loading={adding} >Save</Button>
+                  <Button className="mx-3 btn-fill float-right" variant="info" /*onClick={addData} loading={adding}*/ >Print</Button>
               </Card.Body>
             </Card>
         </Row>
