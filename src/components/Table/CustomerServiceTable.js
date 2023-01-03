@@ -19,7 +19,7 @@ const CustomerServiceTable = (props) => {
             <Toast ref={toast} />
                 <DataTable loading={props.loading} value={props.data} resizableColumns columnResizeMode="expand" responsiveLayout="stack">
                     <Column field="id" header="ID" ></Column>
-                    <Column field="recievedOn" header="Recieved On"></Column>
+                    <Column field="receivedOn" header="Recieved On"></Column>
                     <Column field="handledOn" header="Handled On"></Column>
                     <Column field="reportedOn" header="Reported On"></Column>
                     <Column field="invoice" header="Invoice"  ></Column>
