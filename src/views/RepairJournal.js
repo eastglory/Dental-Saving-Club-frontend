@@ -284,7 +284,7 @@ function RepairJournal() {
             }
 
 
-            axios.post('http://localhost:4000/setRepairJournal', body)
+            axios.post('https://dscbackend.onrender.com/setRepairJournal', body)
                 .then(res => {
                     // localStorage.setItem('tray', JSON.stringify(res.data))
                     // setData(res.data)

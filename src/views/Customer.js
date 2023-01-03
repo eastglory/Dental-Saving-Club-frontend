@@ -101,7 +101,7 @@ function Customer() {
       const result = clientsData.find(item => item.name.toUpperCase() == value.toUpperCase())
       setServiceLoading(true)
       setClientData(result)
-      await axios.get(`http://localhost:4000/getservicedata?client=${value}`).then(res => {
+      await axios.get(`https://dscbackend.onrender.com/getservicedata?client=${value}`).then(res => {
         setServiceData(res.data)
         console.log(res.data)
         setServiceLoading(false)
