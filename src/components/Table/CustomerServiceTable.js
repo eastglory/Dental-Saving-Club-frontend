@@ -14,12 +14,20 @@ const CustomerServiceTable = (props) => {
     const toast = useRef(null);
 
 
+
     return (
         <div className="datatable-editing-demo">
             <Toast ref={toast} />
-                <DataTable loading={props.loading} value={props.data} resizableColumns columnResizeMode="expand" responsiveLayout="stack">
-                    <Column field="id" header="ID" ></Column>
-                    <Column field="receivedOn" header="Recieved On"></Column>
+                <DataTable 
+                    loading={props.loading} 
+                    value={props.data} 
+                    resizableColumns 
+                    rowHover
+                    onRowClick={props.onRowClick}
+                    columnResizeMode="expand" 
+                    responsiveLayout="stack">
+                    <Column field="id" header="ID"></Column>
+                    <Column field="receivedOn" header="Received On"></Column>
                     <Column field="handledOn" header="Handled On"></Column>
                     <Column field="reportedOn" header="Reported On"></Column>
                     <Column field="invoice" header="Invoice"  ></Column>

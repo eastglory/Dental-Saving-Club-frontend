@@ -256,6 +256,7 @@ function RepairJournal() {
         axios.all(uploaders).then(() => {
             const formData = new FormData()
             const body = {
+                recId,
                 datRec: formatDate(datRec),
                 datHan: formatDate(datHan),
                 datRep: formatDate(datRep),
@@ -299,6 +300,7 @@ function RepairJournal() {
                     setAdding(false)
                     console.log(err)
                 })
+            setUrls([])
         })
         
     }
