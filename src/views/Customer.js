@@ -126,7 +126,7 @@ function Customer() {
       <>
         <Modal show={modalVisible} animation={false} onHide={hideModal} size='xl' > 
           <Modal.Header>
-            <Modal.Title>Journal Detail: {modalData.recId}</Modal.Title>
+            <Modal.Title>Journal Detail: ${modalData.recId}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
           <Container fluid>
@@ -467,12 +467,12 @@ function Customer() {
                 <Card.Body>
                   <CustomerServiceTable data={serviceData} loading={serviceLoading} onRowClick={onRowClick}/>
                 </Card.Body>
-                <Card.Header className="text-center pt-5">
+                {/* <Card.Header className="text-center pt-5">
                   <Card.Title className="border-bottom pb-3"as="h4">Purchase Done</Card.Title>
                 </Card.Header>
                 <Card.Body>
                   <CustomerPurchaseTable data={purchaseData}/>
-                </Card.Body>
+                </Card.Body> */}
               </Card>
             </Col>
           </Row>
