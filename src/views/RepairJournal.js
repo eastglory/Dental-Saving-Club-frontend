@@ -14,6 +14,7 @@ import {
 import { Calendar } from 'primereact/calendar';
 import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown';
+import { Image } from 'primereact/image'
 import { InputNumber } from 'primereact/inputnumber'
 import { InputTextarea} from 'primereact/inputtextarea'
 import { Toast } from 'primereact/toast';
@@ -24,6 +25,7 @@ import { Tooltip } from 'primereact/tooltip';
 import { Tag } from 'primereact/tag';
 import { Autocomplete } from '@material-ui/lab';
 import { Checkbox } from 'primereact/checkbox'
+import ImageList from "components/Utils/ImageList";
 import axios from 'axios'
 
 const warranties = [
@@ -236,7 +238,7 @@ function RepairJournal() {
     const addData = async () => {
         setAdding(true)
 
-        const uploaders = files.map(file => {
+        const uploaders = files.map(async file => {
             const formData = new FormData();
             const cloudinaryUrl = "https://api.cloudinary.com/v1_1/dxyshl8cm/image/upload";
             formData.append("file", file);
@@ -244,13 +246,12 @@ function RepairJournal() {
             formData.append('cloud_name', process.env.REACT_APP_CLOUD_NAME)
             console.log(process.env.REACT_APP_CLOUD_NAME)
 
-            return axios.post(cloudinaryUrl, formData).then(res => {
-                const data = res.data
-                const url = data.secure_url
-                let _urls = urls;
-                _urls.push(url)
-                setUrls(_urls)
-            })
+            const res = await axios.post(cloudinaryUrl, formData);
+            const data = res.data;
+            const url_2 = data.secure_url;
+            let _urls = urls;
+            _urls.push(url_2);
+            setUrls(_urls);
         })
 
         axios.all(uploaders).then(() => {
@@ -335,17 +336,19 @@ function RepairJournal() {
     const onTemplateSelect = (e) => {
         let _files = files;
         const selectedFiles = Object.values(e.files)
+        console.log(selectedFiles)
         selectedFiles.forEach(file => {
-            _files.push(file)
+            _files.push(file) 
         });
 
-        console.log(_files)
+        console.log(files)
 
 
         setFiles(_files);
-    }
+    } 
 
     const onTemplateRemove = (file, callback) => {
+        console.log(files)
         const _files = files
         _files.splice(files.indexOf(file), 1)
         setFiles(_files)
@@ -400,7 +403,7 @@ function RepairJournal() {
       <Container fluid>
         <Toast ref={toast} />
         <Row>
-            <Card>
+            <Card id="journal">
               <Card.Header className="d-flex flex-column justify-content-center">
                 <Card.Title className="text-center" as="h4">Repair Journal</Card.Title>
                 <div className="d-flex flex-row mx-auto mt-3 ">
@@ -707,12 +710,249 @@ function RepairJournal() {
                     </Col>
                     </Row>
                   </Form>
-                  <Button className="mx-3 btn-fill float-right" variant="info" onClick={addData} loading={adding} >Save</Button>
-                  <Button className="mx-3 btn-fill float-right" variant="info" /*onClick={addData} loading={adding}*/ >Print</Button>
               </Card.Body>
             </Card>
+            <Button className="mx-3 btn-fill float-right" variant="info" onClick={addData} loading={adding} >Save</Button>
+                  <Button className="mx-3 btn-fill float-right" variant="info" /*onClick={addData} loading={adding}*/ >Print</Button>
         </Row>
       </Container>
+      <Container fluid>
+            <Row>
+              <Card>
+                <Card.Body>
+                  <Form>
+                      <Row>
+                      <Col md="12">
+                          <Row>
+                              <Col className="px-3" md="3">
+                              <Form.Group>
+                                  <label className="font-weight-bold w-100 text-dark rounded">Received Date</label>
+                                  <InputText  value={datRec&&formatDate(datRec)} className="w-100"/>
+                              </Form.Group>
+                              </Col>
+                              <Col className="pr-3" md="3">
+                              <Form.Group>
+                                  <label className="font-weight-bold w-100 text-dark rounded">Handling Date</label>
+                                  <InputText  value={datHan&&formatDate(datHan)}  className="w-100"/>
+                              </Form.Group>
+                              </Col>
+                              <Col className="pr-3" md="3">
+                              <Form.Group>
+                                  <label className="font-weight-bold w-100 text-dark rounded">Report Date</label>
+                                  <InputText  value={datRep&&formatDate(datRep)}  className="w-100"/>
+                              </Form.Group>
+                              </Col>
+                              <Col className="pr-3" md="3" >
+                              <Form.Group>
+                                  <label className="font-weight-bold w-100 text-dark rounded">Person</label>
+                                  <InputText 
+                                       value={person}
+                                      className="w-100"   
+                                  />
+                              </Form.Group>
+                              </Col>
+                          </Row>
+                          <Row className="align-items-center">
+                              <Col className="px-3" md="2">
+                                  <label className="font-weight-bold w-100 text-dark rounded">Customer</label>
+                              </Col>
+                              <Col  md="10">
+                              <InputText 
+                                   value={client}
+                                  className="w-100"/>
+                              </Col>
+                          </Row>
+                          <Row>
+                              <Col className="px-3" md="2">
+                              <Form.Group>
+                                  <label className="font-weight-bold w-100 text-dark rounded">Invoice</label>
+                                  <InputText className="w-100"  value={invoice}/>
+                              </Form.Group>
+                              </Col>
+                              <Col className="pr-3" md="4">
+                              <Form.Group>
+                                  <label className="font-weight-bold w-100 text-dark rounded">Serial</label>
+                                  <InputText 
+                                       value={serial}   
+                                      className="w-100"
+                                  />
+                              </Form.Group>
+                              </Col>
+                              <Col className="pr-3" md="4">
+                              <Form.Group>
+                                  <label className="font-weight-bold w-100 text-dark rounded">Product</label>
+                                  <InputText 
+                                       value={product}
+                                      className="w-100"
+                                      />
+                              </Form.Group>
+                              </Col>
+                              <Col className="pr-3" md="2">
+                              <Form.Group>
+                                  <label className="font-weight-bold w-100 text-dark rounded">Warranty</label>
+                                  <InputText 
+                                       value={warranty}  
+                                      className="w-100"
+                                  />
+                              </Form.Group>
+                              </Col>
+                          </Row>
+                          <Row className="align-items-center">
+                              <Col className="px-3" md="2">
+                                  <label className="font-weight-bold w-100 text-dark rounded">Subject</label>
+                              </Col>
+                              <Col  md="10">
+                              <InputText className="w-100"  value={subject} />
+                              </Col>
+                          </Row>
+                          <Row className="align-items-center">
+                              <Col className="px-3" md="2">
+                                  <label className="font-weight-bold w-100 text-dark rounded">Customer Failur Description</label>
+                              </Col>
+                              <Col  md="10">
+                                  <InputTextarea rows={2} className="w-100"  value={failurDescription} />
+                              </Col>
+                          </Row>
+                          <Row className="align-items-center">
+                              <Col className="px-3" md="2">
+                                  <label className="font-weight-bold w-100 text-dark rounded">Class Malfunced</label>
+                              </Col>
+                              <Col  md="10">
+                              <InputText 
+                                       value={malfunctioned}
+                                      className="w-100"
+                                  />
+                              </Col>
+                          </Row>
+                          <Row className="align-items-center">
+                              <Col className="px-3" md="2">
+                                  <label className="font-weight-bold w-100 text-dark rounded">Defect Analysis</label>
+                              </Col>
+                              <Col  md="10">
+                                  <InputTextarea className="w-100" rows={2}  value={defectAnalysis} />
+                              </Col>
+                          </Row>
+                          <Row className="align-items-center">
+                              <Col className="px-3" md="2">
+                                  <label className="font-weight-bold w-100 text-dark rounded">Comment</label>
+                              </Col>
+                              <Col  md="10">
+                                  <InputTextarea className="w-100" rows={2}  value={comment} />
+                              </Col>
+                          </Row>
+                          <Row className="align-items-center">
+                              <Col className="px-3" md="2">
+                                  <label className="font-weight-bold w-100 text-dark rounded">Analysis</label>
+                              </Col>
+                              <Col  md="10">
+                                  <Row>
+                                      <Col md="5" className="align-items-center" >
+                                          <Checkbox 
+                                               checked={!!check1} 
+                                              inputId="binary" 
+                                              className="mr-2"/>
+                                          <label className="font-weight-bold text-dark rounded">
+                                              Unproper Lubrification
+                                          </label>
+                                      </Col>
+                                      <Col md="4" className="align-items-center" >
+                                          <Checkbox 
+                                               checked={!!check2} 
+                                              inputId="binary" 
+                                              className="mr-2"/>
+                                          <label className="font-weight-bold text-dark rounded">
+                                              Physical Damabe
+                                          </label>
+                                      </Col>
+                                      <Col md="3" className="align-items-center" >
+                                          <Checkbox 
+                                               checked={!!check3} 
+                                              inputId="binary" 
+                                              className="mr-2"/>
+                                          <label className="font-weight-bold text-dark rounded">
+                                              Device Failur
+                                          </label>
+                                      </Col>
+                                  </Row> 
+                                  <Row>  
+                                      <Col md="5" className="align-items-center" >
+                                          <Checkbox 
+                                               checked={!!check4} 
+                                              inputId="binary" 
+                                              className="mr-2"/>
+                                          <label className="font-weight-bold text-dark rounded">
+                                              Serious medical Failure
+                                          </label>
+                                      </Col>
+                                      <Col md="4" className="align-items-center" >
+                                          <Checkbox 
+                                               checked={!!check5} 
+                                              inputId="binary" 
+                                              className="mr-2"/>
+                                          <label className="font-weight-bold text-dark rounded">
+                                              User Failur
+                                          </label>
+                                      </Col>
+                                  </Row>
+                              </Col>  
+                          </Row> 
+                          <ImageList files={files} />
+                          <Row className="pt-4 mt-5">
+                              <Col className="px-3" md="4">
+                              <Form.Group>
+                                  <label className="font-weight-bold w-100 text-dark rounded">Bearings</label>
+                                  <InputText 
+                                       value={bearing}
+                                      className="w-100"
+                                  />
+                              </Form.Group>
+                              </Col>
+                              <Col className="pr-3" md="4">
+                              <Form.Group>
+                                  <label className="font-weight-bold w-100 text-dark rounded">Chucks</label>
+                                  <InputText 
+                                       value={chuck}
+                                      className="w-100"
+                                  />
+                              </Form.Group>
+                              </Col>
+                              <Col className="pr-3" md="4">
+                              <Form.Group>
+                                  <label className="font-weight-bold w-100 text-dark rounded">WATERBLOCKAGE</label>
+                                  <InputText 
+                                       value={waterBlockage} 
+                                      className="w-100"
+                                  />
+                              </Form.Group>
+                              </Col>
+                          </Row>
+                          <Row>
+                              <Col className="pr-3" md="6">
+                              <Form.Group>
+                                  <label className="font-weight-bold w-100 text-dark rounded">Lubrification</label>
+                                  <InputText 
+                                       value={lubrification}
+                                      className="w-100"
+                                  />
+                              </Form.Group>
+                              </Col>
+                              <Col className="pr-3" md="6">
+                              <Form.Group>
+                                  <label className="font-weight-bold w-100 text-dark rounded">Feasability</label>
+                                  <InputText 
+                                       value={feasability}
+                                      className="w-100"
+                                  />
+                              </Form.Group>
+                              </Col>
+                          </Row>
+                      </Col>
+                      </Row>
+                    </Form>
+                </Card.Body>
+              </Card>
+            </Row>
+            </Container>
     </>
   );
 }

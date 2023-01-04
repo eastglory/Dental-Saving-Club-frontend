@@ -167,14 +167,14 @@ function RepairAuth() {
     
 
     
-    // const pdf = new JsPDF('portrait', 'pt', 'a4')
-    // const data = await html2canvas(document.querySelector('#AuthReport'))
-    // const img = data.toDataURL("image/png")
-    // const imgProperties = pdf.getImageProperties(img)
-    // const pdfWidth = pdf.internal.pageSize.getWidth(img)
-    // const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width
-    // pdf.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight)
-    // pdf.save('RepairAuth.pdf')
+    const pdf = new JsPDF('portrait', 'pt', 'a4')
+    const data = await html2canvas(document.querySelector('#AuthReport'))
+    const img = data.toDataURL("image/png")
+    const imgProperties = pdf.getImageProperties(img)
+    const pdfWidth = pdf.internal.pageSize.getWidth(img)
+    const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width
+    pdf.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight)
+    pdf.save('RepairAuth.pdf')
 
     setSaving(false)
   }

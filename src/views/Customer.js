@@ -126,7 +126,7 @@ function Customer() {
       <>
         <Modal show={modalVisible} animation={false} onHide={hideModal} size='xl' > 
           <Modal.Header>
-            <Modal.Title>Journal Detail</Modal.Title>
+            <Modal.Title>Journal Detail: {modalData.recId}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
           <Container fluid>
