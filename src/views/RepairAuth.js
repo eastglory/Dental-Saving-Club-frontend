@@ -25,6 +25,7 @@ import JsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 import axios from 'axios'
 import { Toast } from 'primereact/toast'
+import { useReactToPrint } from 'react-to-print'
 
 
 
@@ -54,6 +55,7 @@ const instructions = [
 function RepairAuth() {
 
   const toast = useRef(null);
+  const authData = useRef(null)
 
   const [quoteOn, setQuoteOn] = useState(new Date());
   const [quoteVia, setQuoteVia] = useState(null)
@@ -164,20 +166,12 @@ function RepairAuth() {
                 console.log(err)
             })
 
-    
-
-    
-    const pdf = new JsPDF('portrait', 'pt', 'a4')
-    const data = await html2canvas(document.querySelector('#AuthReport'))
-    const img = data.toDataURL("image/png")
-    const imgProperties = pdf.getImageProperties(img)
-    const pdfWidth = pdf.internal.pageSize.getWidth(img)
-    const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width
-    pdf.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight)
-    pdf.save('RepairAuth.pdf')
-
     setSaving(false)
   }
+
+  const printData = useReactToPrint({
+    content: () => authData.current
+  })
 
 
 
@@ -185,7 +179,7 @@ function RepairAuth() {
     <div >
       <Toast ref={toast} />
       <Container fluid>
-        <Row id="AuthReport">
+        <Row ref={authData}>
           <Col md="12">
             <Card className="strpied-tabled-with-hover">
               <Card.Header className="d-flex flex-column justify-content-center">
@@ -288,7 +282,7 @@ function RepairAuth() {
         <Col md="12" className="d-flex flex-row justify-content-end">
             <Button className="mx-3" label="Save" loading={saving} onClick={saveAuthData}/>
             <Button className="mx-3" label="Email" loading={searchLoading} />
-            <Button className="mx-3" label="Print" loading={searchLoading} />
+            <Button className="mx-3" label="Print" onClick={printData} />
           </Col>
       </Container>
     </div>

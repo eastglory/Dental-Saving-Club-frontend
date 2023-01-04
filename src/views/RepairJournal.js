@@ -25,7 +25,7 @@ import { Tooltip } from 'primereact/tooltip';
 import { Tag } from 'primereact/tag';
 import { Autocomplete } from '@material-ui/lab';
 import { Checkbox } from 'primereact/checkbox'
-import ImageList from "components/Utils/ImageList";
+import { useReactToPrint } from 'react-to-print'
 import axios from 'axios'
 
 const warranties = [
@@ -218,6 +218,7 @@ function RepairJournal() {
 
     const fileUploadRef = useRef(null);
     const toast = useRef(null);
+    const journalDataRef = useRef(null)
 
     useEffect(() => {
         const clientsData = JSON.parse(localStorage.getItem('clients'))
@@ -306,6 +307,10 @@ function RepairJournal() {
         
     }
 
+    const printData = useReactToPrint({
+        content: () => journalDataRef.current
+    })
+
     const searchByRecId = async () => {
         setSearchLoading(true)
     
@@ -344,14 +349,14 @@ function RepairJournal() {
         console.log(files)
 
 
-        setFiles(_files);
+        setFiles([..._files]);
     } 
 
     const onTemplateRemove = (file, callback) => {
         console.log(files)
         const _files = files
         _files.splice(files.indexOf(file), 1)
-        setFiles(_files)
+        setFiles([..._files])
         callback();
     }
 
@@ -713,10 +718,11 @@ function RepairJournal() {
               </Card.Body>
             </Card>
             <Button className="mx-3 btn-fill float-right" variant="info" onClick={addData} loading={adding} >Save</Button>
-                  <Button className="mx-3 btn-fill float-right" variant="info" /*onClick={addData} loading={adding}*/ >Print</Button>
+                  <Button className="mx-3 btn-fill float-right" variant="info" onClick={printData} >Print</Button>
         </Row>
       </Container>
-      <Container fluid>
+      <div className="d-none">
+      <Container ref={journalDataRef}  id="journaldata" fluid>
             <Row>
               <Card>
                 <Card.Body>
@@ -896,7 +902,14 @@ function RepairJournal() {
                                   </Row>
                               </Col>  
                           </Row> 
-                          <ImageList files={files} />
+                          <div>
+                            <label className="font-weight-bold w-100 text-dark rounded">Image</label>
+                            {
+                                files.map((file, index) => {
+                                    return <img key={index} alt={file.name} role="presentation" src={file.objectURL} width={250} />
+                                })
+                            } 
+                        </div>
                           <Row className="pt-4 mt-5">
                               <Col className="px-3" md="4">
                               <Form.Group>
@@ -953,6 +966,8 @@ function RepairJournal() {
               </Card>
             </Row>
             </Container>
+      </div>
+      
     </>
   );
 }

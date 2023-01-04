@@ -17,6 +17,7 @@
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
     "react-scripts": "5.0.1",
+    "react-to-print": "^2.14.11",
     "reactstrap": "8.8.1",
     "recharts": "^2.2.0",
     "sass": "1.53.0"
