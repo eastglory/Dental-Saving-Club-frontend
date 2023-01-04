@@ -906,7 +906,7 @@ function RepairJournal() {
                             <label className="font-weight-bold w-100 text-dark rounded">Image</label>
                             {
                                 files.map((file, index) => {
-                                    return <img key={index} alt={file.name} role="presentation" src={file.objectURL} width={250} />
+                                    return <img className="m-3" key={index} alt={file.name} role="presentation" src={file.objectURL} width={250} />
                                 })
                             } 
                         </div>
