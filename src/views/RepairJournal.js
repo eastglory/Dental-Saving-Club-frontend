@@ -215,7 +215,8 @@ function RepairJournal() {
     const [searchLoading, setSearchLoading] = useState(false)
     const [files, setFiles] = useState([])
     const [urls, setUrls] = useState([])
-
+    const [reSn, setReSn] = useState('')
+    const [disableReSn, setDisableReSn] = useState(true)
     const fileUploadRef = useRef(null);
     const toast = useRef(null);
     const journalDataRef = useRef(null)
@@ -283,6 +284,7 @@ function RepairJournal() {
                 waterBlockage,
                 lubrification,
                 feasability,
+                reSn,
                 images: JSON.stringify(urls)
             }
 
@@ -707,8 +709,19 @@ function RepairJournal() {
                                     options={feasabilities} 
                                     placeholder="select"
                                     className="w-100"
-                                    onChange={(e) => setFeasability(e.value)}    
+                                    onChange={(e) => {
+                                        setFeasability(e.value)
+                                        if(e.value == "NEW MIDSHAFT GEAR OR/AND NEW HEAD" ||
+                                        e.value == "REPLACE HOUSING") setDisableReSn(false)
+                                        else setDisableReSn(true)
+                                    }}    
                                 />
+                            </Form.Group>
+                            </Col>
+                            <Col className="px-3" md="12">
+                            <Form.Group>
+                                <label className="font-weight-bold w-100 text-dark rounded">Replacement SN</label>
+                                <InputText disabled={disableReSn} className="w-100" value={reSn} onChange={e => setReSn(e.target.value)}/>
                             </Form.Group>
                             </Col>
                         </Row>
@@ -910,55 +923,6 @@ function RepairJournal() {
                                 })
                             } 
                         </div>
-                          <Row className="pt-4 mt-5">
-                              <Col className="px-3" md="4">
-                              <Form.Group>
-                                  <label className="font-weight-bold w-100 text-dark rounded">Bearings</label>
-                                  <InputText 
-                                       value={bearing}
-                                      className="w-100"
-                                  />
-                              </Form.Group>
-                              </Col>
-                              <Col className="pr-3" md="4">
-                              <Form.Group>
-                                  <label className="font-weight-bold w-100 text-dark rounded">Chucks</label>
-                                  <InputText 
-                                       value={chuck}
-                                      className="w-100"
-                                  />
-                              </Form.Group>
-                              </Col>
-                              <Col className="pr-3" md="4">
-                              <Form.Group>
-                                  <label className="font-weight-bold w-100 text-dark rounded">WATERBLOCKAGE</label>
-                                  <InputText 
-                                       value={waterBlockage} 
-                                      className="w-100"
-                                  />
-                              </Form.Group>
-                              </Col>
-                          </Row>
-                          <Row>
-                              <Col className="pr-3" md="6">
-                              <Form.Group>
-                                  <label className="font-weight-bold w-100 text-dark rounded">Lubrification</label>
-                                  <InputText 
-                                       value={lubrification}
-                                      className="w-100"
-                                  />
-                              </Form.Group>
-                              </Col>
-                              <Col className="pr-3" md="6">
-                              <Form.Group>
-                                  <label className="font-weight-bold w-100 text-dark rounded">Feasability</label>
-                                  <InputText 
-                                       value={feasability}
-                                      className="w-100"
-                                  />
-                              </Form.Group>
-                              </Col>
-                          </Row>
                       </Col>
                       </Row>
                     </Form>

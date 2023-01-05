@@ -829,4 +829,6 @@
   white-space: nowrap;
   overflow: visible !important;
   text-overflow: ellipsis;
+  /* color: yellow; */
+  /* height: 30px */
 }
