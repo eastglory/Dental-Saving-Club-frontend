@@ -18,67 +18,9 @@ import {
 import ProgressBar from "@ramonak/react-progress-bar";
 import RepairTrackerTable from "components/Table/RepairTrackerTable";
 import axios from "axios";
+import {products} from '../assets/Products'
 
-const products = [ 
-  { label: 'EZSENSOR 1.0', description: 'HDI-S DIGITAL X RAY SENSOR #1.0', warranty: 730},
-  { label: 'EZSENSOR 1.5',  description: 'HDI-S DIGITAL X RAY SENSOR #1.5', warranty: 730},
-  { label: 'EZSENSOR 2.0', description: 'HDI-S DIGITAL X RAY SENSOR #2.0', warranty: 730},
-  { label: 'WBL-45', description: 'WOLF SURGICAL 45 DEG', warranty:365 },
-  { label: 'WBL-KV-MED', description: 'WOlf Black Label High Speed Standard Head', warranty: 730},
-  { label: 'WBL-KV-SMA',description: 'WOlf Black Label  Mini Head  Without coupler', warranty: 730},
-  { label: 'WBL-NSK-MED',description: 'WOlf Black Label NSK Standard', warranty: 730},
-  { label: 'WBL-NSK-SMAL',description: 'WOlf Black Label NSK Small', warranty: 730},
-  { label: 'WNIN-KV-MEDL',description: 'WOLF NINJA KAVO STANDARD HEAD', warranty: 1825},
-  { label: 'WNIN-KV-SMAL',description: 'WOLF NINJA KAVO MINI  HEAD', warranty: 1825},
-  { label: 'WOLF1:1CA', description: 'WOLF 1:1 CONTRA ANGLE', warranty:365},
-  { label: 'WOLF16:1CA', description: 'WOLF 16:1 CONTRA ANGLE', warranty:365},
-  { label: 'WOLF16:1-H-ROT', description: 'WOLF 16:1 ROTATION HEAD', warranty:365},
-  { label: 'WOLF25', description: 'WOlf 25 K Air Motor', warranty:365},
-  { label: 'WOLF25KLED', description: 'WOLF 25K LED AIR MOTOR', warranty:365},
-  { label: 'WOLF4:1CA', description: 'WOLF 4:1 CONTRA ANGLE', warranty:365},
-  { label: 'WOLF-CFX', description: 'WOLF CURE FX CURING LIGHT', warranty:365},
-  { label: 'WOLFE', description: 'WOlf Electric Micromotor with Tablet' },
-  { label: 'WOLFEIN', description: 'WOlf Internal Micro Motor' },
-  { label: 'WOLF-HYG', description: 'WOLF HYGIENE HANDPIECE SLOW SPEED', warranty: 365},
-  { label: 'WOLF-LUBRICATOR-2HS', description: 'WOLF Lubricator - Lubrication machine- 2 High Speed' },
-  { label: 'WOLF-LUBRICATOR-2SS', description: 'Wolf Lubricator machine - 2 Slow Spped adaptors' },
-  { label: 'WOLF-LUBRICATOR-OIL', description: 'WOlf Oil 1 liter' },
-  { label: 'WOLFPBH', description: 'WOLF PUSH BUTTON BALL BEARING HEAD' },
-  { label: 'WOLFREDX', description: 'WOLF RED X  1:5 HIGH SPEED ELECTRIC', warranty: 365},
-  { label: 'WOLF-SCALATRON', description: 'WOLF SCALATRON Magnetostrictive Ultrasonic Scaler', warranty: 365},
-  { label: 'WOLFSIH', description: 'WOLF SCREW IN PROPHY HEAD' },
-  { label: 'WOLFSLH', description: 'WOLF STANDARD LATCH HEAD' },
-  { label: 'WOLFSNAPON', description: 'WOlf SNAP ON HEAD' },
-  { label: 'WPL-KV-MEDL', description: 'WOlf Platinum Label  Standard KAVO with Light', warranty: 1095}, 
-  { label: 'WPL-KV-SMAL', description: 'WOlf Platinum Label Mini KAVO with Light', warranty: 1095}, 
-  { label: 'WPL-NSK-MEDL', description: 'WOlf Platinum Label  Standard NSK with Light', warranty: 1095}, 
-  { label: 'WPL-NSK-SMAL', description: 'WOLF Platinum Label  small NSK with light', warranty: 1095}, 
-  { label: 'WR-B-FG', description: 'Wolf Blue Ring 1:1 FG', warranty: 365},
-  { label: 'WR-B-FG-H', description: 'Wolf Blue Ring FG PBHead', warranty: 365},
-  { label: 'WR-B-FG-LED', description: 'Wolf Blue Ring 1:1 FG LED', warranty: 365},
-  { label: 'WR-B-RA', description: 'Wolf Blue Ring 1:1 RA', warranty: 365},
-  { label: 'WR-B-RA-H', description: 'Wolf Blue Ring Ra Head', warranty: 365},
-  { label: 'WR-B-RA-H1', description: 'Wolf Blue Ring RA PB Head', warranty: 365},
-  { label: 'WR-B-RA-LED', description: 'WOLF Blue Ring RA LED 1:1', warranty: 365},
-  { label: 'WR-G-FG', description: 'WOLF GREENRING4.1 FG HP', warranty: 365},
-  { label: 'WR-G-RA', description: 'WOlf Green Ring 4:1 Ratio', warranty: 365},
-  { label: 'WR-G-RA-LED', description: 'WOlf Green Ring 4:1 LED', warranty: 365},
-  { label: 'WR-GREY', description: 'Wolf Grey Ring Straight HP.', warranty: 365},
-  { label: 'WR-G-SI-H', description: 'WOLF GREEN RING SCREW HEAD' },
-  { label: 'WSL-5H-MED', description: 'WOlf Silver Label 5 Hole No Light', warranty: 365}, 
-  { label: 'WSL-5H-MEDL', description: 'WOlf Silver Label 5 Hole with Light', warranty: 365}, 
-  { label: 'WSL-5H-SMA', description: 'WOlf Silver Label 5 Hole Small No Light', warranty: 365}, 
-  { label: 'WSL-5H-SMAL', description: 'WOlf Silver Label 5 Hole Small with Light', warranty: 365}, 
-  { label: 'WSL-KV-MED', description: 'WOlf Silver Label Standard KAVO No Light', warranty: 365}, 
-  { label: 'WSL-KV-MEDL', description: 'WOlf Silver Label Standard KAVO with Light', warranty: 365}, 
-  { label: 'WSL-KV-SMA', description: 'WOlf Silver Label Mini head KAVO No Light', warranty: 365}, 
-  { label: 'WSL-KV-SMAL', description: 'WOlf Silver Label Mini Head KAVO with Light', warranty: 365}, 
-  { label: 'WSL-MED-TUR',  description: 'WOLF SILVER LABEL STANDARD TURBINE', warranty: 365}, 
-  { label: 'WSL-NSK-MED',  description: 'WOlf Silver Label Standard NSK No Light', warranty: 365}, 
-  { label: 'WSL-NSK-MEDL', description: 'WOlf Silver Label Standard NSK with Light', warranty: 365}, 
-  { label: 'WSL-NSK-SMA', description: 'WOlf Silver Label Mini NSK NO LIGHT', warranty: 365}, 
-  { label: 'WSL-NSK-SMAL', description: 'WOlf Silver Label Mini NSK with Light', warranty: 365}, 
-]
+
 
 function RepairTracker() {
 
@@ -126,7 +68,7 @@ function RepairTracker() {
           <Col lg="9" sm="12">
             <Row>
               <div className="p-3">
-                <h3><i className="nc-icon nc-settings-gear-64 font-weight-bold"></i> Total Recieved: {received}</h3>
+                <h3 className="align-items-center"><i className="nc-icon nc-settings-gear-64 font-weight-bold"></i> Total Recieved: {received}</h3>
               </div>
             </Row>
             <Row>

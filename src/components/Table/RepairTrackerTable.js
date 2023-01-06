@@ -30,8 +30,8 @@ const RepairTrackerTable = (props) => {
             
         return (
             <ProgressBar className='bg-white' style={{"height" : '4vh'}}>
-                <ProgressBar className="progress-bar-label-overflow text-dark" variant="success" label={green?`${green}%`:""} now={green/2} key={1} />
-                <ProgressBar className="progress-bar-label-overflow text-dark" variant="danger" label= {red?`${red}%`:""} now={red/2} key={2} />
+                <ProgressBar className="progress-bar-label-overflow text-dark" variant="success" label={`${rowData.toWarranty}%`} now={green/2} key={1} />
+                <ProgressBar className="progress-bar-label-overflow text-dark" variant="danger" label="" now={red/2} key={2} />
             </ProgressBar>
         )
     }
