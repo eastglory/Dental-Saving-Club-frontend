@@ -81,7 +81,8 @@ function Customer() {
     }, [modalData])
 
     const formatDate = (date) => {
-      return new Date(date).toISOString().split('T')[0]
+        if(date) return new Date(date).toISOString().split('T')[0]
+        else return ''
     }
 
     const getClientData = async (value) => {

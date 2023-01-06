@@ -45,7 +45,7 @@ function Sidebar({ color, image, routes }) {
               <img src={require("assets/img/logo.jpg")} alt="..." />
             </div>
           </a> */}
-          <a className="simple-text" href="http://www.creative-tim.com">
+          <a className="simple-text" href="#">
             DSC REPAIR HUB
           </a>
         </div>

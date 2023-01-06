@@ -22,12 +22,21 @@ import ProductPieChart from "components/Charts/ProductPieChart";
 import { TreeSelect } from 'primereact/treeselect'
 import { ProgressSpinner } from 'primereact/progressspinner'
 import { TreeProducts } from "assets/Products";
+import { Dropdown } from "primereact/dropdown";
 
 function Dashboard() {
   // const [data, setData] = useState(null)
   const [selectedNode, setSelectedNode] = useState(null)
   const [selectedProducts, setSelectedProducts] = useState([])
   const [loading, setLoading] = useState(false)
+  const [year, setYear] = useState(2023)
+  const [total, setTotal] = useState(0)
+  const [completed, setCompleted] = useState(0)
+  const [progress, setProgress] = useState(0)
+  const [underWarranty, setUnderWarranty] = useState(0)
+  const [outOfWarranty, setOutOfWarranty] = useState(0)
+
+ 
 
   const searchData = (element, key) => {
     if(element.key == key ) return element;
@@ -56,18 +65,18 @@ function Dashboard() {
   }
   return (
       <Container  fluid  >
-        <Row>
+        <Row className="d-flex flex-row justify-content-between p-3">
           <TreeSelect 
             value={selectedNode} 
-            className="w-100 m-3"
+            className="flex-grow-1 mr-2"
             options={TreeProducts.children} 
             onChange={handleSelectNode} 
             filter
             display="chip" 
             selectionMode="checkbox" 
             placeholder="Select Products">
-
           </TreeSelect>
+          <Dropdown className="col-md-2" value={year} options={[2018,2019,2020,2021,2022,2023]} onChange={(e) => setYear(e.value)}/>
         </Row>
         {
           loading?
@@ -84,7 +93,7 @@ function Dashboard() {
                       <Row>
                         <Col xs="4">
                           <div className="icon-big text-center">
-                            <i className="nc-icon nc-settings-tool-66 text-primary"></i>
+                            <i className="nc-icon nc-paper-2 text-primary"></i>
                           </div>
                         </Col>
                         <Col xs="8">
@@ -95,13 +104,13 @@ function Dashboard() {
                         </Col>
                       </Row>
                     </Card.Body>
-                    <Card.Footer>
+                    { /* <Card.Footer> 
                       <hr></hr>
                       <div className="stats">
                         <i className="fas fa-link mr-1"></i>
                         See detail
                       </div>
-                    </Card.Footer>
+                    </Card.Footer> */}
                   </Card>
                 </Col>
                 <Col >
@@ -121,13 +130,13 @@ function Dashboard() {
                         </Col>
                       </Row>
                     </Card.Body>
-                    <Card.Footer>
+                    { /* <Card.Footer> 
                       <hr></hr>
                       <div className="stats">
                         <i className="fas fa-link mr-1"></i>
                         See detail
                       </div>
-                    </Card.Footer>
+                    </Card.Footer> */}
                   </Card>
                 </Col>
                 <Col >
@@ -136,7 +145,7 @@ function Dashboard() {
                       <Row>
                         <Col xs="4">
                           <div className="icon-big text-center icon-warning">
-                            <i className="nc-icon nc-settings-90 text-warning"></i>
+                            <i className="nc-icon nc-refresh-02 text-warning"></i>
                           </div>
                         </Col>
                         <Col xs="8">
@@ -147,13 +156,13 @@ function Dashboard() {
                         </Col>
                       </Row>
                     </Card.Body>
-                    <Card.Footer>
+                    { /* <Card.Footer> 
                       <hr></hr>
                       <div className="stats">
                         <i className="fas fa-link mr-1"></i>
                         See detail
                       </div>
-                    </Card.Footer>
+                    </Card.Footer> */}
                   </Card>
                 </Col>
                 <Col >
@@ -162,7 +171,7 @@ function Dashboard() {
                       <Row>
                         <Col xs="4">
                           <div className="icon-big text-center icon-warning">
-                            <i className="nc-icon nc-tag-content text-primary"></i>
+                            <i className="nc-icon nc-watch-time text-primary"></i>
                           </div>
                         </Col>
                         <Col xs="8">
@@ -173,13 +182,13 @@ function Dashboard() {
                         </Col>
                       </Row>
                     </Card.Body>
-                    <Card.Footer>
+                    { /* <Card.Footer> 
                       <hr></hr>
                       <div className="stats">
                         <i className="fas fa-link mr-1"></i>
                         See detail
                       </div>
-                    </Card.Footer>
+                    </Card.Footer> */}
                   </Card>
                 </Col>
                 <Col >
@@ -188,7 +197,7 @@ function Dashboard() {
                       <Row>
                         <Col xs="4">
                           <div className="icon-big text-center icon-warning">
-                            <i className="nc-icon nc-tag-content text-primary"></i>
+                            <i className="nc-icon nc-watch-time text-danger"></i>
                           </div>
                         </Col>
                         <Col xs="8">
@@ -199,13 +208,13 @@ function Dashboard() {
                         </Col>
                       </Row>
                     </Card.Body>
-                    <Card.Footer>
+                    { /* <Card.Footer> 
                       <hr></hr>
                       <div className="stats">
                         <i className="fas fa-link mr-1"></i>
                         See detail
                       </div>
-                    </Card.Footer>
+                    </Card.Footer> */}
                   </Card>
                 </Col>
               </Row>
