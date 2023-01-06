@@ -56,7 +56,7 @@ function RepairTracker() {
     let productsWarranty = products.find(product => product.label == item.product).warranty
     let warranty = Math.ceil(totalDays * 100 / productsWarranty)
     return warranty
-}
+  }
 
   return (
     <>

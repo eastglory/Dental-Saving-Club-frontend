@@ -22,7 +22,9 @@ import ProductPieChart from "components/Charts/ProductPieChart";
 import { TreeSelect } from 'primereact/treeselect'
 import { ProgressSpinner } from 'primereact/progressspinner'
 import { TreeProducts } from "assets/Products";
+import { products } from "assets/Products";
 import { Dropdown } from "primereact/dropdown";
+import axios from "axios";
 
 function Dashboard() {
   // const [data, setData] = useState(null)
@@ -32,11 +34,30 @@ function Dashboard() {
   const [year, setYear] = useState(2023)
   const [total, setTotal] = useState(0)
   const [completed, setCompleted] = useState(0)
-  const [progress, setProgress] = useState(0)
   const [underWarranty, setUnderWarranty] = useState(0)
   const [outOfWarranty, setOutOfWarranty] = useState(0)
 
- 
+  const calculateWarranty = (item) => {
+    let difference = new Date(item.datRec).getTime() - new Date(item.dop).getTime()
+    let totalDays = Math.ceil(difference / (1000 * 3600 * 24))
+    let productsWarranty = products.find(product => product.label == item.product).warranty
+    let warranty = Math.ceil(totalDays * 100 / productsWarranty)
+    return warranty
+  }
+
+  useEffect(() => {
+    setLoading(true)
+    const _products = selectedProducts.length ? selectedProducts : products.map(product => (product.label))
+    const body = {products: _products, year: year}
+    axios.post('http://localhost:4000/getdashboarddata', body).then(res => {
+      setTotal(res.data.authData.length)
+      setCompleted(res.data.trackerData.length)
+      setUnderWarranty(res.data.trackerData.filter(item => calculateWarranty(item)<100).length)
+      setOutOfWarranty(res.data.trackerData.filter(item => calculateWarranty(item)>=100).length)
+      setLoading(false)
+  }).catch(err => {console.log(err); setLoading(false)})
+
+  }, [selectedProducts, year])
 
   const searchData = (element, key) => {
     if(element.key == key ) return element;
@@ -99,7 +120,7 @@ function Dashboard() {
                         <Col xs="8">
                           <div className="numbers">
                             <p className="card-category">Total</p>
-                            <Card.Title as="h2">150</Card.Title>
+                            <Card.Title as="h2">{total}</Card.Title>
                           </div>
                         </Col>
                       </Row>
@@ -125,7 +146,7 @@ function Dashboard() {
                         <Col xs="8">
                           <div className="numbers">
                             <p className="card-category">Completed</p>
-                            <Card.Title as="h2">100</Card.Title>
+                            <Card.Title as="h2">{completed}</Card.Title>
                           </div>
                         </Col>
                       </Row>
@@ -151,7 +172,7 @@ function Dashboard() {
                         <Col xs="8">
                           <div className="numbers">
                             <p className="card-category">In Progress</p>
-                            <Card.Title as="h2">50</Card.Title>
+                            <Card.Title as="h2">{total - completed}</Card.Title>
                           </div>
                         </Col>
                       </Row>
@@ -177,7 +198,7 @@ function Dashboard() {
                         <Col xs="8">
                           <div className="numbers">
                             <p className="card-category">Under Warranty</p>
-                            <Card.Title as="h2">635</Card.Title>
+                            <Card.Title as="h2">{underWarranty}</Card.Title>
                           </div>
                         </Col>
                       </Row>
@@ -203,7 +224,7 @@ function Dashboard() {
                         <Col xs="8">
                           <div className="numbers">
                             <p className="card-category">Out of Warranty</p>
-                            <Card.Title as="h2">635</Card.Title>
+                            <Card.Title as="h2">{outOfWarranty}</Card.Title>
                           </div>
                         </Col>
                       </Row>
