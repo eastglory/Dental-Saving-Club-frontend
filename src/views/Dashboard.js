@@ -49,7 +49,7 @@ function Dashboard() {
     setLoading(true)
     const _products = selectedProducts.length ? selectedProducts : products.map(product => (product.label))
     const body = {products: _products, year: year}
-    axios.post('http://localhost:4000/getdashboarddata', body).then(res => {
+    axios.post('https://dscbackend.onrender.com/getdashboarddata', body).then(res => {
       setTotal(res.data.authData.length)
       setCompleted(res.data.trackerData.length)
       setUnderWarranty(res.data.trackerData.filter(item => calculateWarranty(item)<100).length)
@@ -89,7 +89,7 @@ function Dashboard() {
         <Row className="d-flex flex-row justify-content-between p-3">
           <TreeSelect 
             value={selectedNode} 
-            className="flex-grow-1 mr-2"
+            className="flex-grow-1 mr-2 overflow-hidden"
             options={TreeProducts.children} 
             onChange={handleSelectNode} 
             filter
@@ -243,8 +243,8 @@ function Dashboard() {
                 <Col md="8">
                   <Card>
                     <Card.Header className="text-center">
-                      <Card.Title as="h4">Customer's Orders</Card.Title>
-                      <p className="card-category">1 Week performance</p>
+                      <Card.Title as="h4">Products Journal</Card.Title>
+                      <p className="card-category">1 Year performance</p>
                     </Card.Header>
                     <Card.Body>
                       <ProductLineChart />
