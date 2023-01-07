@@ -90,7 +90,7 @@ function Customer() {
       const result = clientsData.find(item => item.name.toUpperCase() == value.toUpperCase())
       setServiceLoading(true)
       setClientData(result)
-      await axios.get(`https://dscbackend.onrender.com/getservicedata?client=${value}`).then(res => {
+      await axios.get(`https://coordinated-supreme-spoonbill.glitch.me/getservicedata?client=${value}`).then(res => {
         let _serviceData = []
         res.data.forEach(item => {
           _serviceData.push({

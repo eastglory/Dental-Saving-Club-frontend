@@ -52,11 +52,11 @@ function Admin() {
   };
   React.useEffect(() => {
     console.log("Getting Data")
-    axios.get('https://dscbackend.onrender.com/getalltray')
+    axios.get('https://coordinated-supreme-spoonbill.glitch.me/getalltray')
             .then(res => {localStorage.setItem('tray', JSON.stringify(res.data))})
             .catch(err => console.log(err) )
         
-        axios.get('https://dscbackend.onrender.com/getallclients')
+        axios.get('https://coordinated-supreme-spoonbill.glitch.me/getallclients')
             .then(res => localStorage.setItem('clients', JSON.stringify(res.data)))
             .catch(err => console.log(err))
   }, [])

@@ -193,7 +193,7 @@ function RepairJournal() {
             }
 
 
-            axios.post('https://dscbackend.onrender.com/setRepairJournal', body)
+            axios.post('https://coordinated-supreme-spoonbill.glitch.me/setRepairJournal', body)
                 .then(res => {
                     // localStorage.setItem('tray', JSON.stringify(res.data))
                     // setData(res.data)
@@ -229,7 +229,7 @@ function RepairJournal() {
             const year = yeartray.slice(0,4)
             const tray = yeartray.slice(4)
             setDatRec(new Date(`${mon}-${day}-${year}`))
-            await axios.get(`https://dscbackend.onrender.com/getserialsfromrecid?recId=${recId}`)
+            await axios.get(`https://coordinated-supreme-spoonbill.glitch.me/getserialsfromrecid?recId=${recId}`)
                 .then(res => {
                     let arr = []
                     res.data.forEach(item => arr.push(item.serial))

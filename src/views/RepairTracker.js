@@ -34,7 +34,7 @@ function RepairTracker() {
 
   useEffect(() => {
     setTableLoading(true)
-    axios.get('https://dscbackend.onrender.com/getrepairtrackerdata').then(res => {
+    axios.get('https://coordinated-supreme-spoonbill.glitch.me/getrepairtrackerdata').then(res => {
       let _data = res.data
       let temp = _data.map(item => (
           {...item, toWarranty: calculateWarranty(item)}

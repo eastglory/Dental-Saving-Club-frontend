@@ -39,11 +39,11 @@ const RepairTrayTable = () => {
 
 
     useEffect(() => {
-        // axios.get('https://dscbackend.onrender.com/getalltray')
+        // axios.get('https://coordinated-supreme-spoonbill.glitch.me/getalltray')
         //     .then(res => {setData(res.data); setLoading(false)})
         //     .catch(err => console.log(err) )
         
-        // axios.get('https://dscbackend.onrender.com/getallclients')
+        // axios.get('https://coordinated-supreme-spoonbill.glitch.me/getallclients')
         //     .then(res => {setClients(res.data)})
         //     .catch(err => console.log(err))
 
@@ -87,7 +87,7 @@ const RepairTrayTable = () => {
     const onRowEditComplete = async (e) => {
         const { newData } = e
         setLoading(true)
-        await axios.post('https://dscbackend.onrender.com/settray', 
+        await axios.post('https://coordinated-supreme-spoonbill.glitch.me/settray', 
                 {...newData, recId: newData.receptionDate.replace(/(..)\-(..)\-(....)/, "$2-$1-$3") + newData.tray}
             )
             .then(res => {

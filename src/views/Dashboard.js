@@ -49,7 +49,7 @@ function Dashboard() {
     setLoading(true)
     const _products = selectedProducts.length ? selectedProducts : products.map(product => (product.label))
     const body = {products: _products, year: year}
-    axios.post('https://dscbackend.onrender.com/getdashboarddata', body).then(res => {
+    axios.post('https://coordinated-supreme-spoonbill.glitch.me/getdashboarddata', body).then(res => {
       setTotal(res.data.authData.length)
       setCompleted(res.data.trackerData.length)
       setUnderWarranty(res.data.trackerData.filter(item => calculateWarranty(item)<100).length)
