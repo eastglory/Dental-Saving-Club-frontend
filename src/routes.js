@@ -28,42 +28,42 @@ const dashboardRoutes = [
   {
     path: "/dashboard",
     name: "Dashboard",
-    icon: "nc-icon nc-chart-pie-35",
+    icon: "chart-line",
     component: Dashboard,
     layout: "/admin"
   },
   {
     path: "/repairTray",
     name: "Repair Tray",
-    icon: "nc-icon nc-settings-gear-64",
+    icon: "table",
     component: RepairTray,
     layout: "/admin"
   },
   {
     path: "/repairAuth",
     name: "Repair Authorization",
-    icon: "nc-icon nc-check-2",
+    icon: "sticky-note",
     component: RepairAuth,
     layout: "/admin"
   },
   {
     path: "/repairJournal",
     name: "Repair Journal",
-    icon: "nc-icon nc-settings-90",
+    icon: "book",
     component: RepairJournal,
     layout: "/admin"
   },
   {
     path: "/repairTracker",
     name: "Repair Tracker",
-    icon: "nc-icon nc-watch-time",
+    icon: "clock",
     component: RepairTracker,
     layout: "/admin"
   },
   {
     path: "/customers",
     name: "Customers",
-    icon: "nc-icon nc-circle-09",
+    icon: "users",
     component: Customer,
     layout: "/admin"
   },

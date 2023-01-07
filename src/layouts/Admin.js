@@ -23,6 +23,7 @@ import Footer from "components/Footer/Footer";
 import Sidebar from "components/Sidebar/Sidebar";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 import axios from "axios";
+import ControllableSidebar from "components/Sidebar/ControllableSidebar";
 
 import routes from "routes.js";
 
@@ -75,11 +76,12 @@ function Admin() {
   }, [location]);
   return (
     <>
-      <div className="wrapper">
-        <Sidebar color={color} image={hasImage ? image : ""} routes={routes} />
-        <div className="main-panel" ref={mainPanel}>
+      <div className="wrapper d-flex">
+        {/* <Sidebar color={color} image={hasImage ? image : ""} routes={routes} /> */}
+        <ControllableSidebar routes={routes} />
+        <div className="overflow-auto w-100" ref={mainPanel}>
           <AdminNavbar />
-          <div className="content">
+          <div className="content px-3 pt-4">
             <Switch>{getRoutes(routes)}</Switch>
           </div>
         </div>

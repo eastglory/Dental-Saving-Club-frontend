@@ -634,8 +634,11 @@ function RepairJournal() {
                   </Form>
               </Card.Body>
             </Card>
-            <Button className="mx-3 btn-fill float-right" variant="info" onClick={addData} loading={adding} >Save</Button>
-                  <Button className="mx-3 btn-fill float-right" variant="info" onClick={printData} >Print</Button>
+            <div className="d-flex flex-row">
+                <Button className="mr-5 btn-fill float-right" variant="info" onClick={addData} loading={adding} >Save</Button>
+                <Button className="mr-3 btn-fill float-right" variant="info" onClick={printData} >Print</Button>
+            </div>
+            
         </Row>
       </Container>
       <div className="d-none">

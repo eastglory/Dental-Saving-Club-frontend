@@ -89,7 +89,7 @@ function Dashboard() {
         <Row className="d-flex flex-row justify-content-between p-3">
           <TreeSelect 
             value={selectedNode} 
-            className="flex-grow-1 mr-2 overflow-hidden"
+            className="flex-grow-1 overflow-hidden col-md-9 mr-2"
             options={TreeProducts.children} 
             onChange={handleSelectNode} 
             filter

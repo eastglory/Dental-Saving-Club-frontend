@@ -280,7 +280,7 @@ function RepairAuth() {
           </Col>
           
         </Row>
-        <Col md="12" className="d-flex flex-row justify-content-end">
+        <Col md="12" className="d-flex flex-row mt-3 justify-content-end">
             <Button className="mx-3" label="Save" loading={saving} onClick={saveAuthData}/>
             <Button className="mx-3" label="Email" loading={searchLoading} />
             <Button className="mx-3" label="Print" onClick={printData} />
