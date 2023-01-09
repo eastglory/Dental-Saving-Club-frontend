@@ -820,9 +820,8 @@
   height:10px;
 }
 
-.datatable-editing-demo .editable-cells-table td.p-cell-editing {
-  padding-top: 0;
-  padding-bottom: 0;
+.datatable-editing-demo{
+  transform: rotateX(180deg);
 }
 
 .progress-bar-label-overflow {

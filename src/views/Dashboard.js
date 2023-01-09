@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 // react-bootstrap components
 import {
   Badge,
@@ -25,6 +25,7 @@ import { TreeProducts } from "assets/Products";
 import { products } from "assets/Products";
 import { Dropdown } from "primereact/dropdown";
 import axios from "axios";
+import { Toast } from "primereact/toast"
 
 function Dashboard() {
   // const [data, setData] = useState(null)
@@ -36,6 +37,8 @@ function Dashboard() {
   const [completed, setCompleted] = useState(0)
   const [underWarranty, setUnderWarranty] = useState(0)
   const [outOfWarranty, setOutOfWarranty] = useState(0)
+
+  const toast = useRef(null)
 
   const calculateWarranty = (item) => {
     let difference = new Date(item.datRec).getTime() - new Date(item.dop).getTime()
@@ -85,6 +88,7 @@ function Dashboard() {
     setSelectedProducts(arr)
   }
   return (
+    
       <Container  fluid  >
         <Row className="d-flex flex-row justify-content-between p-3">
           <TreeSelect 
@@ -107,7 +111,7 @@ function Dashboard() {
                 fill="var(--surface-ground)" 
                 animationDuration="1s" /> :
             <>
-              <Row className="d-flex flex-row justify-content-between">
+              <Row className="d-flex flex-lg-row flex-md-column flex-sm-column flex-xs-column justify-content-between">
                 <Col >
                   <Card className="card-stats">
                     <Card.Body>
@@ -240,7 +244,7 @@ function Dashboard() {
                 </Col>
               </Row>
               <Row>
-                <Col md="8">
+                <Col lg="8" md='12'>
                   <Card>
                     <Card.Header className="text-center">
                       <Card.Title as="h4">Products Journal</Card.Title>
@@ -344,7 +348,7 @@ function Dashboard() {
                   </Col>
                 </Row>
                 </Col>
-                <Col md="4">
+                <Col lg="4" md='12'>
                   <Card>
                     <Card.Header className="text-center p-5">
                       <Card.Title className="border-bottom pb-3"as="h4">Orders Statistics</Card.Title>

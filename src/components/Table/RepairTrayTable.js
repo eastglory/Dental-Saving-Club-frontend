@@ -161,7 +161,7 @@ const RepairTrayTable = () => {
     }
 
     return (
-        <div className="datatable-editing-demo">
+        <div className="">
             <Toast ref={toast} />
             <DataTable 
                 value={data} 

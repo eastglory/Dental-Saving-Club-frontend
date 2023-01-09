@@ -47,9 +47,12 @@ const RepairTrackerTable = (props) => {
 
 
     return (
-        <div className="datatable-editing-demo">
+        <div>
             <Toast ref={toast} />
                 <DataTable 
+                    className="datatable-editing-demo"
+                    tableClassName="datatable-editing-demo"
+                    paginatorClassName='datatable-editing-demo'
                     value={data} 
                     filterDisplay="row" 
                     editMode="row" 
@@ -66,13 +69,13 @@ const RepairTrackerTable = (props) => {
                     <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="serial" header="Serial Number"></Column>
                     <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="dop" header="Original D.O.P" body={dopBodyTemplate} ></Column>
                     <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="datRec" header="Received on" body={datRecBodyTemplate}></Column>
+                    <Column field="toWarranty" header="To Warranty" body={toWarrantyBodyTemplate}></Column>
                     <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="bearing" header="Bearing" ></Column>
                     <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="chuck" header="Chuck" ></Column>
                     <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="waterblockage" header="Water Blockage" ></Column>
                     <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="lubrification" header="Lubrification" ></Column>
                     <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="feasability" header="Repair Feasability" ></Column>
                     <Column filterHeaderClassName="py-0" filterHeaderStyle={{"minWidth": '200px'}} filter sortable field="resn" header="Replacement SN"  ></Column>
-                    <Column field="toWarranty" header="To Warranty" body={toWarrantyBodyTemplate}></Column>
                 </DataTable>
         </div>
     )

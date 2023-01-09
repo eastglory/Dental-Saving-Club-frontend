@@ -43,7 +43,7 @@ const CustomerServiceTable = (props) => {
     }
 
     return (
-        <div className="datatable-editing-demo">
+        <div className="">
             <Toast ref={toast} />
                 <DataTable 
                     filters={filters}

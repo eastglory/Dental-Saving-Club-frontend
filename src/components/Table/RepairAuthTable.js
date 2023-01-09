@@ -260,7 +260,7 @@ const RepairAuthTable = (props) => {
     const paginatorRight = <Button type="button" icon="pi pi-cloud" className="p-button-text" />;
 
     return (
-        <div className="datatable-editing-demo">
+        <div className="">
             <Toast ref={toast} />
                 <DataTable 
                     value={data} 

@@ -18,7 +18,7 @@ const CustomerPurchaseTable = (props) => {
     }, [])
 
     return (
-        <div className="datatable-editing-demo">
+        <div className="">
             <Toast ref={toast} />
                 <DataTable value={data} resizableColumns columnResizeMode="expand" responsiveLayout="stack">
                     <Column field="id" header="ID" ></Column>
