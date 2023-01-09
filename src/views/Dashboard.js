@@ -140,7 +140,7 @@ function Dashboard() {
           'UNPROPER LUBRIFICATION': res.data.trackerData.filter(item => item.check1 == 1 && item.recId.split('-')[0] == i + 1).length,
           'PHYSICAL DAMAGE': res.data.trackerData.filter(item => item.check2 == 1 && item.recId.split('-')[0] == i + 1).length,
           'DEVICE FAILUR': res.data.trackerData.filter(item => item.check3 == 1 && item.recId.split('-')[0] == i + 1).length,
-          'SERIOUS MEDICAL FAILURE': res.data.trackerData.filter(item => item.check4 == 1 && item.recId.split('-')[0] == i + 1).length,
+          'SERIOUS MEDICAL FAILUR': res.data.trackerData.filter(item => item.check4 == 1 && item.recId.split('-')[0] == i + 1).length,
           'USER FAILUR': res.data.trackerData.filter(item => item.check5 == 1 && item.recId.split('-')[0] == i + 1).length
         })
       }
