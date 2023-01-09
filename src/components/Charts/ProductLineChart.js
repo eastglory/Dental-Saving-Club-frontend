@@ -38,11 +38,11 @@ const data = [
     },
 ];
 
-function ProductLineChart(){
+function ProductLineChart(props){
     return (
         <ResponsiveContainer width="100%" height={200}>
             <LineChart
-            data={data}
+            data={props.data}
             margin={{
                 top: 5,
                 right: 30,
@@ -55,8 +55,7 @@ function ProductLineChart(){
             <YAxis />
             <Tooltip />
             <Legend />
-            <Line type="linear" dataKey="Product 1" stroke="#007bff" activeDot={{ r: 8 }} />
-            <Line type="linear" dataKey="Product 2" stroke="#dc3545" />
+            <Line type="linear" dataKey="Total Repair" stroke="#007bff" activeDot={{ r: 8 }} />
             </LineChart>
         </ResponsiveContainer>
     )

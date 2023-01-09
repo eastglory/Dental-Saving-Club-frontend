@@ -26,6 +26,48 @@ import { products } from "assets/Products";
 import { Dropdown } from "primereact/dropdown";
 import axios from "axios";
 import { Toast } from "primereact/toast"
+import CustomPieChart from "components/Charts/CustomPieChart";
+
+const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', "Dec"]
+const analysisNames = [
+  'UNPROPER LUBRIFICATION', 
+  'PHYSICAL DAMAGE', 
+  'DEVICE FAILUR', 
+  'SERIOUS MEDICAL FAILUR', 
+  'USER FAILUR', 
+]
+
+const waterBlockageList = [
+  "Yes",
+  "No",
+]
+
+const lubrificationList = [
+  "Adequate", 
+  "Under lubricated",
+  "Over lubricated",
+  "None",
+]
+
+const chucks = [
+  "GOOD RETENTION", 
+  "DOES NOT HOLD", 
+  "DOES NOT RELEASE", 
+]
+
+const bearings = [
+  "GOOD",
+  "WORN",
+  "CORRODED",
+]
+
+const feasabilities = [
+  "REPAIRED", 
+  "NEW MIDSHAFT GEAR OR/AND NEW HEAD", 
+  "REPLACE HOUSING", 
+  "RETURNED AS IS", 
+  "DISPOSED", 
+]
 
 function Dashboard() {
   // const [data, setData] = useState(null)
@@ -37,6 +79,19 @@ function Dashboard() {
   const [completed, setCompleted] = useState(0)
   const [underWarranty, setUnderWarranty] = useState(0)
   const [outOfWarranty, setOutOfWarranty] = useState(0)
+  const [monthlySpreadData, setMonthlySpreadData] = useState([])
+  const [numCheck1, setNumCheck1] = useState(0)
+  const [numCheck2, setNumCheck2] = useState(0)
+  const [numCheck3, setNumCheck3] = useState(0)
+  const [numCheck4, setNumCheck4] = useState(0)
+  const [numCheck5, setNumCheck5] = useState(0)
+  const [monthlyAnalysis, setMonthlyAnalysis] = useState([])
+  const [analysisPerType, setAnalysisPerType] = useState([])
+  const [bearingData, setBearingData] = useState([])
+  const [chuckData, setChuckData] = useState([])
+  const [waterblockageData, setWaterblockageData] = useState([])
+  const [lubrificationData, setLubrificationData] = useState([])
+  const [feasabilityData, setFeasabilityData] = useState([])
 
   const toast = useRef(null)
 
@@ -53,10 +108,106 @@ function Dashboard() {
     const _products = selectedProducts.length ? selectedProducts : products.map(product => (product.label))
     const body = {products: _products, year: year}
     axios.post('https://coordinated-supreme-spoonbill.glitch.me/getdashboarddata', body).then(res => {
+
+      //setting 5 cards data
       setTotal(res.data.authData.length)
       setCompleted(res.data.trackerData.length)
       setUnderWarranty(res.data.trackerData.filter(item => calculateWarranty(item)<100).length)
       setOutOfWarranty(res.data.trackerData.filter(item => calculateWarranty(item)>=100).length)
+
+      //setting line chart data 
+      let _data = []
+      for(let i = 0; i < 12; i++){
+        _data.push({
+          name: monthNames[i],
+          "Total Repair": res.data.authData.filter(item => item.recId.split('-')[0] == i+1).length
+        })
+      }
+      setMonthlySpreadData(_data)
+
+      //setting check data
+      setNumCheck1(res.data.trackerData.filter(item => item.check1 == 1).length)
+      setNumCheck2(res.data.trackerData.filter(item => item.check2 == 1).length)
+      setNumCheck3(res.data.trackerData.filter(item => item.check3 == 1).length)
+      setNumCheck4(res.data.trackerData.filter(item => item.check4 == 1).length)
+      setNumCheck5(res.data.trackerData.filter(item => item.check5 == 1).length)
+
+      //setting monthly analysis data
+      let _monthlyAnalysisData = []
+      for(let i = 0; i < 12; i++){
+        _monthlyAnalysisData.push({
+          name: monthNames[i],
+          'UNPROPER LUBRIFICATION': res.data.trackerData.filter(item => item.check1 == 1 && item.recId.split('-')[0] == i + 1).length,
+          'PHYSICAL DAMAGE': res.data.trackerData.filter(item => item.check2 == 1 && item.recId.split('-')[0] == i + 1).length,
+          'DEVICE FAILUR': res.data.trackerData.filter(item => item.check3 == 1 && item.recId.split('-')[0] == i + 1).length,
+          'SERIOUS MEDICAL FAILURE': res.data.trackerData.filter(item => item.check4 == 1 && item.recId.split('-')[0] == i + 1).length,
+          'USER FAILUR': res.data.trackerData.filter(item => item.check5 == 1 && item.recId.split('-')[0] == i + 1).length
+        })
+      }
+      setMonthlyAnalysis(_monthlyAnalysisData)
+
+      //setting analysis data per type
+      // let _analysisPerType = []
+      // for(let i = 0; i < 5; i++){
+      //   let _data = {}
+      //   _data.name = analysisNames[i]
+      //   monthNames.forEach((item, index) => {
+      //     _data[item] = res.data.trackerData.filter(tracker => tracker.recId.split('-')[0] == index + 1).length
+      //   })
+      //   _analysisPerType.push(_data)
+      // }
+      // setAnalysisPerType(_analysisPerType)
+
+      //setting bearing data
+      let _bearingData = []
+      bearings.forEach(bearing => {
+        _bearingData.push({
+          name: bearing,
+          value: res.data.trackerData.filter(item => item.bearing == bearing).length
+        })
+      })
+      setBearingData(_bearingData)
+
+      //setting chuck data
+      let _chuckData = []
+      chucks.forEach(chuck => {
+        _chuckData.push({
+          name: chuck,
+          value: res.data.trackerData.filter(item => item.chuck == chuck).length
+        })
+      })
+      setChuckData(_chuckData)
+
+      //setting waterblockage data
+      let _waterblockageData = []
+      waterBlockageList.forEach(waterblockage => {
+        _waterblockageData.push({
+          name: waterblockage,
+          value: res.data.trackerData.filter(item => item.waterblockage == waterblockage).length
+        })
+      })
+      setWaterblockageData(_waterblockageData)
+
+      //setting lubrifcation data
+      let _lubrificationData = []
+      lubrificationList.forEach(lubrification => {
+        _lubrificationData.push({
+          name: lubrification,
+          value: res.data.trackerData.filter(item => item.lubrification == lubrification).length
+        })
+      })
+      setLubrificationData(_lubrificationData)
+
+      //setting feasability data
+      let _feasabilityData = []
+      feasabilities.forEach(feasability => {
+        _feasabilityData.push({
+          name: feasability,
+          value: res.data.trackerData.filter(item => item.feasability == feasability).length
+        })
+      })
+      setFeasabilityData(_feasabilityData)
+
       setLoading(false)
   }).catch(err => {console.log(err); setLoading(false)})
 
@@ -247,102 +398,68 @@ function Dashboard() {
                 <Col lg="8" md='12'>
                   <Card>
                     <Card.Header className="text-center">
-                      <Card.Title as="h4">Products Journal</Card.Title>
-                      <p className="card-category">1 Year performance</p>
+                      <Card.Title as="h4">Monthly Spread</Card.Title>
+                      <p className="card-category">{year}</p>
                     </Card.Header>
                     <Card.Body>
-                      <ProductLineChart />
+                      <ProductLineChart data={monthlySpreadData}/>
                     </Card.Body>
                   </Card>
                   <Row>
                     <Col md="4">
                       <Card>
                         <Card.Header className="text-center">
-                          <Card.Title as="h4">Lorem Ipsum</Card.Title>
+                          <Card.Title as="h4">Bearings</Card.Title>
                           <hr></hr>
                         </Card.Header>
                         <Card.Body>
-                          <ProductPieChart />
+                          <CustomPieChart data={bearingData}/>
                         </Card.Body>
                       </Card>
                     </Col>
                     <Col md="4">
                       <Card>
                         <Card.Header className="text-center">
-                          <Card.Title as="h4">Lorem Ipsum</Card.Title>
+                          <Card.Title as="h4">Chucks</Card.Title>
                           <hr></hr>
                         </Card.Header>
                         <Card.Body>
-                          <ProductLineChart />
+                          <CustomPieChart data={chuckData}/>
                         </Card.Body>
                       </Card>
                     </Col>
                     <Col md="4">
                       <Card>
                         <Card.Header className="text-center">
-                          <Card.Title as="h4">Lorem Ipsum</Card.Title>
+                          <Card.Title as="h4">Waterblockage</Card.Title>
                           <hr></hr>
                         </Card.Header>
                         <Card.Body>
-                          <ProductBarChart />
+                          <CustomPieChart data={waterblockageData}/>
                         </Card.Body>
                       </Card>
                     </Col>
                   </Row>
                   <Row>
                   <Col md="6">
-                    <Card className="p-3">
+                    <Card>
                       <Card.Header className="text-center">
-                        <Card.Title as="h4">Products Sales</Card.Title>
-                        <p className="card-category">All products including Taxes</p>
+                        <Card.Title as="h4">Lubrification</Card.Title>
+                        <hr></hr>
                       </Card.Header>
-                      <hr></hr>
                       <Card.Body>
-                        <div className="py-2">
-                          <p className="card-category">Product 1</p>
-                          <ProgressBar bgColor="#007bff" height="10px" borderRadius="10px" isLabelVisible={false} completed={40}/>
-                        </div>
-                        <div className="py-2">
-                          <p className="card-category">Product 2</p>
-                          <ProgressBar bgColor="#28a745" height="10px" borderRadius="10px" isLabelVisible={false} completed={80}/>
-                        </div>
-                        <div className="py-2">
-                          <p className="card-category">Product 3</p>
-                          <ProgressBar bgColor="#dc3545" height="10px" borderRadius="10px" isLabelVisible={false} completed={24}/>
-                        </div>
-                        <div className="py-2">
-                          <p className="card-category">Product 4</p>
-                          <ProgressBar bgColor="#ffc107" height="10px" borderRadius="10px" isLabelVisible={false} completed={38}/>
-                        </div>
+                        <CustomPieChart data={lubrificationData}/>
                       </Card.Body>
                     </Card>
                   </Col>
                   <Col md="6">
-                    <Card className="p-3">
+                    <Card>
                       <Card.Header className="text-center">
-                        <Card.Title as="h4">Products Sales</Card.Title>
-                        <p className="card-category">All products including Taxes</p>
+                        <Card.Title as="h4">Feasability</Card.Title>
+                        <hr></hr>
                       </Card.Header>
-                      <hr></hr>
                       <Card.Body>
-                        <Row>
-                          <Col xs="4" className="border-right">
-                            <p className="card-category text-right py-2">Product 1</p>
-                            <p className="card-category text-right py-2">Product 2</p>
-                            <p className="card-category text-right py-2">Product 3</p>
-                            <p className="card-category text-right py-2">Product 4</p>
-                            <p className="card-category text-right py-2">Product 5</p>
-                            <p className="card-category text-right py-2">Product 6</p>
-                          </Col>
-                          <Col xs="8">
-                            <ProgressBar className="py-2" bgColor="#007bff" baseBgColor="#ffffff" borderRadius="10px" completed={40}/>
-                            <ProgressBar className="py-2" bgColor="#28a745" baseBgColor="#ffffff" borderRadius="10px" completed={100}/>
-                            <ProgressBar className="py-2" bgColor="#dc3545" baseBgColor="#ffffff" borderRadius="10px" completed={54}/>
-                            <ProgressBar className="py-2" bgColor="#ffc107" baseBgColor="#ffffff" borderRadius="10px" completed={38}/>
-                            <ProgressBar className="py-2" bgColor="#6c757d" baseBgColor="#ffffff" borderRadius="10px" completed={75}/>
-                            <ProgressBar className="py-2" bgColor="#6610f2" baseBgColor="#ffffff" borderRadius="10px" completed={43}/>
-                          </Col>
-                        </Row>   
+                        <CustomPieChart data={feasabilityData}/>
                       </Card.Body>
                     </Card>
                   </Col>
@@ -351,37 +468,44 @@ function Dashboard() {
                 <Col lg="4" md='12'>
                   <Card>
                     <Card.Header className="text-center p-5">
-                      <Card.Title className="border-bottom pb-3"as="h4">Orders Statistics</Card.Title>
+                      <Card.Title className="border-bottom pb-3"as="h4">Analysis</Card.Title>
                     </Card.Header>
                     <Card.Body>
                       <div className="d-flex justify-content-between px-4 py-1">
-                        <p className="m-0">Lorem Ipsum</p>
-                        <Badge pill bg="warning" className="px-3" text="white">120</Badge>
+                        <p className="m-0">Unproper lubrification</p>
+                        <Badge pill bg="primary" className="px-3" text="white">{numCheck1}</Badge>
                       </div>
                       <div className="d-flex justify-content-between px-4 py-1">
-                        <p className="m-0">product imsum</p>
-                        <Badge pill bg="warning" className="px-3" text="white">120</Badge>
+                        <p className="m-0">Physical damage</p>
+                        <Badge pill bg="success" className="px-3" text="white">{numCheck2}</Badge>
                       </div>
                       <div className="d-flex justify-content-between px-4 py-1">
-                        <p className="m-0">dental product sale</p>
-                        <Badge pill bg="warning" className="px-3" text="white">120</Badge>
+                        <p className="m-0">Device failur</p>
+                        <Badge pill bg="warning" className="px-3" text="white">{numCheck3}</Badge>
                       </div>
                       <div className="d-flex justify-content-between px-4 py-1">
-                        <p className="m-0">Lorem product dental save</p>
-                        <Badge pill bg="warning" className="px-3" text="white">120</Badge>
+                        <p className="m-0">Serious medical failur</p>
+                        <Badge pill bg="danger" className="px-3" text="white">{numCheck4}</Badge>
                       </div>
                       <div className="d-flex justify-content-between px-4 py-1">
-                        <p className="m-0">dental saving club</p>
-                        <Badge pill bg="warning" className="px-3" text="white">120</Badge>
+                        <p className="m-0">User failur</p>
+                        <Badge pill bg="secondary" className="px-3" text="white">{numCheck5}</Badge>
                       </div>
                     </Card.Body>
-                    <Card.Header className="text-center p-5">
-                      <Card.Title className="border-bottom pb-3"as="h4">Orders Statistics</Card.Title>
+                    <Card.Header className="text-center pt-5">
+                      <Card.Title className="border-bottom pb-3"as="h4">Monthly Analysis</Card.Title>
                     </Card.Header>
                     <Card.Body>
-                      <ProductBarChart />
+                      <ProductBarChart data={monthlyAnalysis} dropdown={analysisNames} default={analysisNames[0]}/>
                     </Card.Body>
-                    <Card.Header className="text-center p-5">
+                    
+                    {/* <Card.Header className="text-center pt-5">
+                      <Card.Title className="border-bottom pb-3"as="h4">Analysis Per Type</Card.Title>
+                    </Card.Header>
+                    <Card.Body>
+                      <ProductBarChart data={analysisPerType} dropdown={monthNames} default={monthNames[0]}/>
+                    </Card.Body> */}
+                    {/* <Card.Header className="text-center p-5">
                       <Card.Title className="border-bottom pb-3"as="h4">Orders Statistics</Card.Title>
                     </Card.Header>
                     <Card.Body>
@@ -397,8 +521,17 @@ function Dashboard() {
                           </div>
                         </Col>
                       </Row>
-                    </Card.Body>
+                    </Card.Body> */}
                   </Card>
+                    <Card>
+                      <Card.Header className="text-center">
+                        <Card.Title as="h4">Warranty</Card.Title>
+                        <hr></hr>
+                      </Card.Header>
+                      <Card.Body>
+                        <ProductPieChart data={[{name: "Under", value: underWarranty}, {name: "Out", value: outOfWarranty}]}/>
+                      </Card.Body>
+                    </Card>
                 </Col>
               </Row>
             </>
