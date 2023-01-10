@@ -56,7 +56,7 @@ export default function CustomPieChart(props){
                         <Tooltip />
                         <Legend />
                         {
-                            props.data.map((item, index) => (<Bar barsize={7} dataKey={item.name} fill={COLORS[index % COLORS.length]} />))
+                            props.data.map((item, index) => (<Bar key={`bar-${index}`} barsize={7} dataKey={item.name} fill={COLORS[index % COLORS.length]} />))
                         }
                         </BarChart>):
                         (<PieChart>
