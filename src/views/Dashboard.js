@@ -108,22 +108,65 @@ function Dashboard() {
     const _products = selectedProducts.length ? selectedProducts : products.map(product => (product.label))
     const body = {products: _products, year: year}
     axios.post('https://coordinated-supreme-spoonbill.glitch.me/getdashboarddata', body).then(res => {
+      axios.post('https://coordinated-supreme-spoonbill.glitch.me/getdashboarddata', {products: _products, year: year-1}).then(resp => {
+        let _data = []
+        if(selectedProducts.includes("HIGH SPEED") && !selectedProducts.includes("SLOW SPEED")){
+          for(let i = 0; i < 12; i++){
+            _data.push({
+              name: monthNames[i],
+              "NINJA": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[0]).includes(item.description)).length,
+              "PLATINUM": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[1]).includes(item.description)).length,
+              "BLACK": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[2]).includes(item.description)).length,
+              "SILVER": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[3]).includes(item.description)).length,
+              "NINJA(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[0]).includes(item.description)).length,
+              "PLATINUM(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[1]).includes(item.description)).length,
+              "BLACK(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[2]).includes(item.description)).length,
+              "SILVER(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[3]).includes(item.description)).length,
+            })
+          }
+        }
+
+        if(!selectedProducts.includes("HIGH SPEED") && selectedProducts.includes("SLOW SPEED")){
+          for(let i = 0; i < 12; i++){
+            _data.push({
+              name: monthNames[i],
+              "RA": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2].children[0]).includes(item.description)).length,
+              "FG": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2].children[1]).includes(item.description)).length,
+              "RA(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2].children[0]).includes(item.description)).length,
+              "FG(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2].children[1]).includes(item.description)).length,
+            })
+          }
+        }
+
+        if(selectedProducts.includes("HIGH SPEED") && selectedProducts.includes("SLOW SPEED")){
+          for(let i = 0 ; i< 12 ; i++){
+            _data.push({
+              name: monthNames[i],
+              "HIGH SPEED": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1]).includes(item.description)).length,
+              "SLOW SPEED": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2]).includes(item.description)).length,
+              "HIGH SPEED(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1]).includes(item.description)).length,
+              "SLOW SPEED(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2]).includes(item.description)).length,
+            })
+          }
+        }
+
+        if(!selectedProducts.includes("HIGH SPEED") && !selectedProducts.includes("SLOW SPEED")){
+          for(let i = 0; i < 12; i++){
+            _data.push({
+              name: monthNames[i],
+              "TOTAL": res.data.authData.filter(item => item.recId.split('-')[0] == i+1).length,
+              "TOTAL(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1).length,
+            })
+          }
+        }
+        setMonthlySpreadData(_data)
+      }).catch(err => console.log(err))
 
       //setting 5 cards data
       setTotal(res.data.authData.length)
       setCompleted(res.data.trackerData.length)
       setUnderWarranty(res.data.trackerData.filter(item => calculateWarranty(item)<100).length)
       setOutOfWarranty(res.data.trackerData.filter(item => calculateWarranty(item)>=100).length)
-
-      //setting line chart data 
-      let _data = []
-      for(let i = 0; i < 12; i++){
-        _data.push({
-          name: monthNames[i],
-          "Total Repair": res.data.authData.filter(item => item.recId.split('-')[0] == i+1).length
-        })
-      }
-      setMonthlySpreadData(_data)
 
       //setting check data
       setNumCheck1(res.data.trackerData.filter(item => item.check1 == 1).length)
@@ -234,7 +277,6 @@ function Dashboard() {
     Object.keys(value).forEach(item => {
       if(value[item].checked) arr.push(searchData(TreeProducts, item).label)
     })
-    console.log(arr)
     setLoading(false)
     setSelectedProducts(arr)
   }
