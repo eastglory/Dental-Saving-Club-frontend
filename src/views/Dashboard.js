@@ -114,14 +114,18 @@ function Dashboard() {
           for(let i = 0; i < 12; i++){
             _data.push({
               name: monthNames[i],
-              "NINJA": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[0]).includes(item.description)).length,
-              "PLATINUM": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[1]).includes(item.description)).length,
-              "BLACK": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[2]).includes(item.description)).length,
-              "SILVER": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[3]).includes(item.description)).length,
-              "NINJA(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[0]).includes(item.description)).length,
-              "PLATINUM(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[1]).includes(item.description)).length,
-              "BLACK(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[2]).includes(item.description)).length,
-              "SILVER(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[3]).includes(item.description)).length,
+              current: {
+                "NINJA": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[0]).includes(item.description)).length,
+                "PLATINUM": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[1]).includes(item.description)).length,
+                "BLACK": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[2]).includes(item.description)).length,
+                "SILVER": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[3]).includes(item.description)).length,
+              },
+              last: {
+                "NINJA": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[0]).includes(item.description)).length,
+                "PLATINUM": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[1]).includes(item.description)).length,
+                "BLACK": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[2]).includes(item.description)).length,
+                "SILVER": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1].children[3]).includes(item.description)).length,
+              }
             })
           }
         }
@@ -130,10 +134,14 @@ function Dashboard() {
           for(let i = 0; i < 12; i++){
             _data.push({
               name: monthNames[i],
-              "RA": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2].children[0]).includes(item.description)).length,
-              "FG": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2].children[1]).includes(item.description)).length,
-              "RA(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2].children[0]).includes(item.description)).length,
-              "FG(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2].children[1]).includes(item.description)).length,
+              current: {
+                "RA": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2].children[0]).includes(item.description)).length,
+                "FG": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2].children[1]).includes(item.description)).length,
+              },
+              last : {
+                "RA": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2].children[0]).includes(item.description)).length,
+                "FG": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2].children[1]).includes(item.description)).length,
+              }
             })
           }
         }
@@ -142,10 +150,14 @@ function Dashboard() {
           for(let i = 0 ; i< 12 ; i++){
             _data.push({
               name: monthNames[i],
-              "HIGH SPEED": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1]).includes(item.description)).length,
-              "SLOW SPEED": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2]).includes(item.description)).length,
-              "HIGH SPEED(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1]).includes(item.description)).length,
-              "SLOW SPEED(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2]).includes(item.description)).length,
+              current: {
+                "HIGH SPEED": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1]).includes(item.description)).length,
+                "SLOW SPEED": res.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2]).includes(item.description)).length,
+              },
+              last: {
+                "HIGH SPEED": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[1]).includes(item.description)).length,
+                "SLOW SPEED": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1 && JSON.stringify(TreeProducts.children[2]).includes(item.description)).length,
+              }
             })
           }
         }
@@ -154,8 +166,13 @@ function Dashboard() {
           for(let i = 0; i < 12; i++){
             _data.push({
               name: monthNames[i],
-              "TOTAL": res.data.authData.filter(item => item.recId.split('-')[0] == i+1).length,
-              "TOTAL(last year)": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1).length,
+              current: {
+                "TOTAL": res.data.authData.filter(item => item.recId.split('-')[0] == i+1).length,
+              },
+              last: {
+                "TOTAL": resp.data.authData.filter(item => item.recId.split('-')[0] == i+1).length,
+              }
+              
             })
           }
         }
