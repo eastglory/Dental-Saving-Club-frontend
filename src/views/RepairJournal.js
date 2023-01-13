@@ -102,6 +102,7 @@ function RepairJournal() {
     const [check3,setCheck3] = useState(false);
     const [check4, setCheck4] = useState(false);
     const [check5, setCheck5] = useState(false);
+    const [exImage, setExImage] = useState(false)
     const [invoice, setInvoice] = useState(null)
     const [serial, setSerial] = useState(null)
     const [subject, setSubject] = useState(null)
@@ -538,23 +539,7 @@ function RepairJournal() {
                         </Row>
                     </Col>
                     <Col md="5">
-                        <label className="font-weight-bold w-100 text-dark rounded">Image</label>
-                        <FileUpload 
-                            ref={fileUploadRef} 
-                            name="demo[]" 
-                            multiple 
-                            accept="image/*" 
-                            maxFileSize={1000000}
-                            onSelect={onTemplateSelect} 
-                            onError={onTemplateClear} 
-                            onClear={onTemplateClear}
-                            headerTemplate={headerTemplate} 
-                            itemTemplate={itemTemplate} 
-                            emptyTemplate={emptyTemplate}
-                            chooseOptions={chooseOptions} 
-                            cancelOptions={cancelOptions} />
-                            
-                        <Row className="pt-4 mt-5">
+                        <Row >
                             <Col className="px-3" md="4">
                             <Form.Group>
                                 <label className="font-weight-bold w-100 text-dark rounded">Bearings</label>
@@ -629,6 +614,30 @@ function RepairJournal() {
                             </Form.Group>
                             </Col>
                         </Row>
+                        <label className="font-weight-bold w-100 text-dark rounded">Image</label>
+                        <FileUpload 
+                            ref={fileUploadRef} 
+                            name="demo[]" 
+                            multiple 
+                            accept="image/*" 
+                            maxFileSize={1000000}
+                            onSelect={onTemplateSelect} 
+                            onError={onTemplateClear} 
+                            onClear={onTemplateClear}
+                            headerTemplate={headerTemplate} 
+                            itemTemplate={itemTemplate} 
+                            emptyTemplate={emptyTemplate}
+                            chooseOptions={chooseOptions} 
+                            cancelOptions={cancelOptions} />
+                            <label className="font-weight-bold text-dark rounded float-right mt-2">
+                                Export Image
+                            </label>
+                            <Checkbox 
+                                checked={exImage} 
+                                onChange={(e) => setExImage(e.checked)}
+                                inputId="binary" 
+                                className="float-right m-2"/>
+                            
                     </Col>
                     </Row>
                   </Form>
@@ -822,14 +831,20 @@ function RepairJournal() {
                                   </Row>
                               </Col>  
                           </Row> 
-                          <div>
-                            <label className="font-weight-bold w-100 text-dark rounded">Image</label>
-                            {
-                                files.map((file, index) => {
-                                    return <img className="m-3" key={index} alt={file.name} role="presentation" src={file.objectURL} width={250} />
-                                })
-                            } 
-                        </div>
+                          {
+                            exImage? 
+                            (
+                                <div>
+                                <label className="font-weight-bold w-100 text-dark rounded">Image</label>
+                                {
+                                    files.map((file, index) => {
+                                        return <img className="m-3" key={index} alt={file.name} role="presentation" src={file.objectURL} width={250} />
+                                    })
+                                } 
+                                </div> 
+                            ) : null
+                          }
+                          
                       </Col>
                       </Row>
                     </Form>

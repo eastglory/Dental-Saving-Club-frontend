@@ -65,7 +65,7 @@ function RepairTracker() {
           <Col lg="3" sm="12">
               <Image fluid src={require("assets/img/logo.jpg")} />
           </Col>
-          <Col lg="9" sm="12">
+          {/* <Col lg="9" sm="12">
             <Row>
               <div className="p-3">
                 <h3 className="align-items-center"><i className="nc-icon nc-settings-gear-64 font-weight-bold"></i> Total Recieved: {received}</h3>
@@ -123,7 +123,7 @@ function RepairTracker() {
               </Col>
             </Row>
 
-          </Col>
+          </Col> */}
         </Row>
         <Row>
           <Col md="12">
